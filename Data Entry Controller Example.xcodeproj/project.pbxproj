@@ -1,0 +1,426 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		C304EA6F1B7A52A8006885A6 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C304EA6E1B7A52A8006885A6 /* AppDelegate.swift */; };
+		C304EA711B7A52A8006885A6 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C304EA701B7A52A8006885A6 /* ViewController.swift */; };
+		C304EA741B7A52A8006885A6 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C304EA721B7A52A8006885A6 /* Main.storyboard */; };
+		C304EA761B7A52A8006885A6 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C304EA751B7A52A8006885A6 /* Images.xcassets */; };
+		C304EA791B7A52A8006885A6 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = C304EA771B7A52A8006885A6 /* LaunchScreen.xib */; };
+		C304EA851B7A52A8006885A6 /* Data_Entry_Controller_ExampleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C304EA841B7A52A8006885A6 /* Data_Entry_Controller_ExampleTests.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		C304EA7F1B7A52A8006885A6 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C304EA611B7A52A8006885A6 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = C304EA681B7A52A8006885A6;
+			remoteInfo = "Data Entry Controller Example";
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		C304EA691B7A52A8006885A6 /* Data Entry Controller Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Data Entry Controller Example.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		C304EA6D1B7A52A8006885A6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		C304EA6E1B7A52A8006885A6 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		C304EA701B7A52A8006885A6 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		C304EA731B7A52A8006885A6 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		C304EA751B7A52A8006885A6 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		C304EA781B7A52A8006885A6 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
+		C304EA7E1B7A52A8006885A6 /* Data Entry Controller ExampleTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Data Entry Controller ExampleTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		C304EA831B7A52A8006885A6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		C304EA841B7A52A8006885A6 /* Data_Entry_Controller_ExampleTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Data_Entry_Controller_ExampleTests.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		C304EA661B7A52A8006885A6 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C304EA7B1B7A52A8006885A6 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		C304EA601B7A52A8006885A6 = {
+			isa = PBXGroup;
+			children = (
+				C304EA6B1B7A52A8006885A6 /* Data Entry Controller Example */,
+				C304EA811B7A52A8006885A6 /* Data Entry Controller ExampleTests */,
+				C304EA6A1B7A52A8006885A6 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		C304EA6A1B7A52A8006885A6 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				C304EA691B7A52A8006885A6 /* Data Entry Controller Example.app */,
+				C304EA7E1B7A52A8006885A6 /* Data Entry Controller ExampleTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		C304EA6B1B7A52A8006885A6 /* Data Entry Controller Example */ = {
+			isa = PBXGroup;
+			children = (
+				C304EA6E1B7A52A8006885A6 /* AppDelegate.swift */,
+				C304EA701B7A52A8006885A6 /* ViewController.swift */,
+				C304EA721B7A52A8006885A6 /* Main.storyboard */,
+				C304EA751B7A52A8006885A6 /* Images.xcassets */,
+				C304EA771B7A52A8006885A6 /* LaunchScreen.xib */,
+				C304EA6C1B7A52A8006885A6 /* Supporting Files */,
+			);
+			path = "Data Entry Controller Example";
+			sourceTree = "<group>";
+		};
+		C304EA6C1B7A52A8006885A6 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				C304EA6D1B7A52A8006885A6 /* Info.plist */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		C304EA811B7A52A8006885A6 /* Data Entry Controller ExampleTests */ = {
+			isa = PBXGroup;
+			children = (
+				C304EA841B7A52A8006885A6 /* Data_Entry_Controller_ExampleTests.swift */,
+				C304EA821B7A52A8006885A6 /* Supporting Files */,
+			);
+			path = "Data Entry Controller ExampleTests";
+			sourceTree = "<group>";
+		};
+		C304EA821B7A52A8006885A6 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				C304EA831B7A52A8006885A6 /* Info.plist */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		C304EA681B7A52A8006885A6 /* Data Entry Controller Example */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C304EA881B7A52A8006885A6 /* Build configuration list for PBXNativeTarget "Data Entry Controller Example" */;
+			buildPhases = (
+				C304EA651B7A52A8006885A6 /* Sources */,
+				C304EA661B7A52A8006885A6 /* Frameworks */,
+				C304EA671B7A52A8006885A6 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Data Entry Controller Example";
+			productName = "Data Entry Controller Example";
+			productReference = C304EA691B7A52A8006885A6 /* Data Entry Controller Example.app */;
+			productType = "com.apple.product-type.application";
+		};
+		C304EA7D1B7A52A8006885A6 /* Data Entry Controller ExampleTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C304EA8B1B7A52A8006885A6 /* Build configuration list for PBXNativeTarget "Data Entry Controller ExampleTests" */;
+			buildPhases = (
+				C304EA7A1B7A52A8006885A6 /* Sources */,
+				C304EA7B1B7A52A8006885A6 /* Frameworks */,
+				C304EA7C1B7A52A8006885A6 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				C304EA801B7A52A8006885A6 /* PBXTargetDependency */,
+			);
+			name = "Data Entry Controller ExampleTests";
+			productName = "Data Entry Controller ExampleTests";
+			productReference = C304EA7E1B7A52A8006885A6 /* Data Entry Controller ExampleTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		C304EA611B7A52A8006885A6 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0640;
+				ORGANIZATIONNAME = "Carl Goldsmith";
+				TargetAttributes = {
+					C304EA681B7A52A8006885A6 = {
+						CreatedOnToolsVersion = 6.4;
+					};
+					C304EA7D1B7A52A8006885A6 = {
+						CreatedOnToolsVersion = 6.4;
+						TestTargetID = C304EA681B7A52A8006885A6;
+					};
+				};
+			};
+			buildConfigurationList = C304EA641B7A52A8006885A6 /* Build configuration list for PBXProject "Data Entry Controller Example" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = C304EA601B7A52A8006885A6;
+			productRefGroup = C304EA6A1B7A52A8006885A6 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				C304EA681B7A52A8006885A6 /* Data Entry Controller Example */,
+				C304EA7D1B7A52A8006885A6 /* Data Entry Controller ExampleTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		C304EA671B7A52A8006885A6 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C304EA741B7A52A8006885A6 /* Main.storyboard in Resources */,
+				C304EA791B7A52A8006885A6 /* LaunchScreen.xib in Resources */,
+				C304EA761B7A52A8006885A6 /* Images.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C304EA7C1B7A52A8006885A6 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		C304EA651B7A52A8006885A6 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C304EA711B7A52A8006885A6 /* ViewController.swift in Sources */,
+				C304EA6F1B7A52A8006885A6 /* AppDelegate.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C304EA7A1B7A52A8006885A6 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C304EA851B7A52A8006885A6 /* Data_Entry_Controller_ExampleTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		C304EA801B7A52A8006885A6 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = C304EA681B7A52A8006885A6 /* Data Entry Controller Example */;
+			targetProxy = C304EA7F1B7A52A8006885A6 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		C304EA721B7A52A8006885A6 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				C304EA731B7A52A8006885A6 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		C304EA771B7A52A8006885A6 /* LaunchScreen.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				C304EA781B7A52A8006885A6 /* Base */,
+			);
+			name = LaunchScreen.xib;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		C304EA861B7A52A8006885A6 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.4;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		C304EA871B7A52A8006885A6 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.4;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		C304EA891B7A52A8006885A6 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				INFOPLIST_FILE = "Data Entry Controller Example/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		C304EA8A1B7A52A8006885A6 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				INFOPLIST_FILE = "Data Entry Controller Example/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+		C304EA8C1B7A52A8006885A6 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+				);
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = "Data Entry Controller ExampleTests/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Data Entry Controller Example.app/Data Entry Controller Example";
+			};
+			name = Debug;
+		};
+		C304EA8D1B7A52A8006885A6 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = "Data Entry Controller ExampleTests/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Data Entry Controller Example.app/Data Entry Controller Example";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		C304EA641B7A52A8006885A6 /* Build configuration list for PBXProject "Data Entry Controller Example" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C304EA861B7A52A8006885A6 /* Debug */,
+				C304EA871B7A52A8006885A6 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C304EA881B7A52A8006885A6 /* Build configuration list for PBXNativeTarget "Data Entry Controller Example" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C304EA891B7A52A8006885A6 /* Debug */,
+				C304EA8A1B7A52A8006885A6 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		C304EA8B1B7A52A8006885A6 /* Build configuration list for PBXNativeTarget "Data Entry Controller ExampleTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C304EA8C1B7A52A8006885A6 /* Debug */,
+				C304EA8D1B7A52A8006885A6 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = C304EA611B7A52A8006885A6 /* Project object */;
+}
