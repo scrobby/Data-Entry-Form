@@ -79,7 +79,7 @@ class DataEntryFormSetupAmount: DataEntryFormSetup {
 		//MARK: Create a spacer
 		let spacer = UIView()
 		spacer.backgroundColor = .clearColor()
-		self.addSubview(spacer)
+		self.view.addSubview(spacer)
 		spacer.setTranslatesAutoresizingMaskIntoConstraints(false)
 		
 		//MARK: Constraints
@@ -114,7 +114,7 @@ class DataEntryFormSetupAmount: DataEntryFormSetup {
 		
 		//add all views to the main view
 		for viewToAdd in viewsToAdd {
-			self.addSubview(viewToAdd)
+			self.view.addSubview(viewToAdd)
 		}
 		
 		//now create all these bloody constraints
@@ -139,7 +139,7 @@ class DataEntryFormSetupAmount: DataEntryFormSetup {
 		constraints += NSLayoutConstraint.constraintsWithVisualFormat("V:[_8][_5(_8)][_2(_5)][_0(_2)]|", options: .AlignAllCenterX, metrics: nil, views: viewsDict)
 		constraints += NSLayoutConstraint.constraintsWithVisualFormat("V:[_9][_6(_9)][_3(_6)][_Delete(_3)]|", options: .AlignAllCenterX, metrics: nil, views: viewsDict)
 		
-		self.addConstraints(constraints)
+		self.view.addConstraints(constraints)
 		backgroundView.addConstraints(constraints2)
 	}
 	

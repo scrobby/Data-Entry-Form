@@ -54,17 +54,17 @@ class DataEntryFormSetup: UIView {
     var formTitle: String?
     var formType: DataEntryFormSetupType
     var delegate: DataEntryFormSetupDelegate?
-	var contentView: UIVisualEffectView {
-		if _contentView == nil {
-			_contentView = UIVisualEffectView(effect: UIBlurEffect(style: .ExtraLight))
-			_contentView?.frame = self.bounds
-			_contentView?.setTranslatesAutoresizingMaskIntoConstraints(false)
+	var contentBackground: UIVisualEffectView {
+		if _contentBackground == nil {
+			_contentBackground = UIVisualEffectView(effect: UIBlurEffect(style: .ExtraLight))
+			_contentBackground?.frame = self.bounds
+			_contentBackground?.setTranslatesAutoresizingMaskIntoConstraints(false)
 		}
 		
-		return _contentView!
+		return _contentBackground!
 	}
 	
-	var _contentView: UIVisualEffectView?
+	var _contentBackground: UIVisualEffectView?
     
     var needsBackground = true //by default this is true; a DataEntrySetupController may override this if it is providing its own background
 	var backgroundNeedsRefresh = true //override this to force a screenshot to be taken again
@@ -205,7 +205,7 @@ class DataEntryFormSetup: UIView {
         self.layer.cornerRadius = 20.0
         self.clipsToBounds = true
 		
-		self.insertSubview(self.contentView, atIndex: 0)
+		self.insertSubview(self.contentBackground, atIndex: 0)
 		
 		NSNotificationCenter.defaultCenter().addObserver(self, selector: "deviceDidRotate", name: UIDeviceOrientationDidChangeNotification, object: nil)
         
@@ -397,26 +397,7 @@ class DataEntryFormSetup: UIView {
         cancelButton.addTarget(self, action: "cancelButtonPressed:", forControlEvents: .TouchUpInside)
         doneButton.addTarget(self, action: "doneButtonPressed:", forControlEvents: .TouchUpInside)
         
-        DataEntryFormSetup.keyWindow.addSubview(cancelButton)
-        DataEntryFormSetup.keyWindow.addSubview(doneButton)
-        
-        cancelButton.alpha = 0.0
-        doneButton.alpha = 0.0
-        
-        //set up autolayout
-        let items = ["cancel" : cancelButton, "done" : doneButton, "background" : self]
-        let metrics = ["vertical_spacing" : 15]
-        
-        var constraints = NSLayoutConstraint.constraintsWithVisualFormat("V:[background]-vertical_spacing-[cancel]", options: .AlignAllLeading, metrics: metrics, views: items)
-        constraints += NSLayoutConstraint.constraintsWithVisualFormat("V:[background]-vertical_spacing-[done]", options: .AlignAllTrailing, metrics: metrics, views: items)
-        constraints += NSLayoutConstraint.constraintsWithVisualFormat("[cancel]->=60-[done(cancel)]", options: .AlignAllCenterY, metrics: nil, views: items)
-        
-        DataEntryFormSetup.keyWindow.addConstraints(constraints)
-        
-        UIView.animateWithDuration(0.5, animations: { () -> Void in
-            self.cancelButton.alpha = 1.0
-            self.doneButton.alpha = 1.0
-        })
+		
     }
     
     func cancelButtonPressed(sender: AnyObject) {
