@@ -31,7 +31,6 @@ class DataEntryFormSetupAmount: DataEntryFormSetup {
 		return "."
 	}
 	
-	
 	//MARK: - Initialisation
 	convenience init(title: String?, delegate: DataEntryFormSetupDelegate) {
 		self.init(title: title, type: .Amount, delegate: delegate)
@@ -39,8 +38,6 @@ class DataEntryFormSetupAmount: DataEntryFormSetup {
 	
 	required init(title: String?, type: DataEntryFormSetupType, delegate: DataEntryFormSetupDelegate) {
 		super.init(title: title, type: type, delegate: delegate)
-		
-		println(self.formTitle)
 	}
 	
 	required init(coder aDecoder: NSCoder) {
@@ -79,7 +76,7 @@ class DataEntryFormSetupAmount: DataEntryFormSetup {
 		//MARK: Create a spacer
 		let spacer = UIView()
 		spacer.backgroundColor = .clearColor()
-		self.view.addSubview(spacer)
+		self.contentView.addSubview(spacer)
 		spacer.setTranslatesAutoresizingMaskIntoConstraints(false)
 		
 		//MARK: Constraints
@@ -114,7 +111,7 @@ class DataEntryFormSetupAmount: DataEntryFormSetup {
 		
 		//add all views to the main view
 		for viewToAdd in viewsToAdd {
-			self.view.addSubview(viewToAdd)
+			self.contentView.addSubview(viewToAdd)
 		}
 		
 		//now create all these bloody constraints
@@ -139,7 +136,7 @@ class DataEntryFormSetupAmount: DataEntryFormSetup {
 		constraints += NSLayoutConstraint.constraintsWithVisualFormat("V:[_8][_5(_8)][_2(_5)][_0(_2)]|", options: .AlignAllCenterX, metrics: nil, views: viewsDict)
 		constraints += NSLayoutConstraint.constraintsWithVisualFormat("V:[_9][_6(_9)][_3(_6)][_Delete(_3)]|", options: .AlignAllCenterX, metrics: nil, views: viewsDict)
 		
-		self.view.addConstraints(constraints)
+		self.contentView.addConstraints(constraints)
 		backgroundView.addConstraints(constraints2)
 	}
 	
@@ -275,6 +272,10 @@ class DataEntryFormSetupAmount: DataEntryFormSetup {
 		}
 	}
 	
+	//MARK: - Override
+	override func preferredViewHeight() -> CGFloat {
+		return 350.0
+	}
 }
 
 

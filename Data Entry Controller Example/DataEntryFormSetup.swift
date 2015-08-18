@@ -50,68 +50,49 @@ enum DataEntryFormAnimationType {
 }
 
 class DataEntryFormSetup: UIView {
-    //MARK: - Core Variables
-    var formTitle: String?
-    var formType: DataEntryFormSetupType
-    var delegate: DataEntryFormSetupDelegate?
-	var contentBackground: UIVisualEffectView {
+	//MARK: Private Variables
+	private var _contentBackground: UIVisualEffectView?
+	private var contentBackground: UIVisualEffectView {
 		if _contentBackground == nil {
 			_contentBackground = UIVisualEffectView(effect: UIBlurEffect(style: .ExtraLight))
 			_contentBackground?.frame = self.bounds
 			_contentBackground?.setTranslatesAutoresizingMaskIntoConstraints(false)
 		}
-		
 		return _contentBackground!
 	}
 	
-	var _contentBackground: UIVisualEffectView?
-    
-    var needsBackground = true //by default this is true; a DataEntrySetupController may override this if it is providing its own background
-	var backgroundNeedsRefresh = true //override this to force a screenshot to be taken again
-	var backgroundImageView: UIImageView {
-		get {
-			if self._backgroundImageView == nil {
-				self._backgroundImageView = UIImageView(frame: DataEntryFormSetup.keyWindow.bounds)
-			}
-			
-			self._backgroundImageView?.backgroundColor = .blackColor()
-			
-			if backgroundNeedsRefresh {
-//				self._backgroundImageView!.image = DataEntryFormSetup.blurredBackgroundImage
-				backgroundNeedsRefresh = false
-			}
-			return self._backgroundImageView!
+	
+	
+	var _backgroundImageView: UIImageView?
+	private var backgroundImageView: UIImageView {
+		if self._backgroundImageView == nil {
+			self._backgroundImageView = UIImageView(frame: DataEntryFormSetup.keyWindow.bounds)
 		}
 		
-		set {
-			self._backgroundImageView = newValue
+		self._backgroundImageView?.backgroundColor = .blackColor()
+		
+		if backgroundNeedsRefresh {
+			backgroundNeedsRefresh = false
 		}
+		return self._backgroundImageView!
 	}
-	var _backgroundImageView: UIImageView?
 	
-	var shouldBounce = true //a DataEntrySetupController may override this to make animating between views look better
-    
-    
+    private var tempImage: UIImageView!
+	private var cancelButton = UIButton.buttonWithType(.System) as! UIButton
+	private var doneButton = UIButton.buttonWithType(.System) as! UIButton
+	
+	private var _contentView: UIView?
+	private var _snapBehaviour: UISnapBehavior?
+	private var _pushBehaviour: UIPushBehavior?
+	private var _gravityBehaviour: UIGravityBehavior?
+	private var _preferredViewHeight: CGFloat?
+	
     //MARK:Dynamic Animators
     let snapBehaviourDamping: CGFloat = 0.5
     let pushMagnitude: CGFloat = 200.0
     let gravityMagnitude: CGFloat = 20.0
     
     var animator: UIDynamicAnimator?
-	var gravityBehaviour: UIGravityBehavior {
-		set {
-			self._gravityBehaviour = newValue
-		}
-		
-		get {
-			if self._gravityBehaviour == nil {
-				self._gravityBehaviour = UIGravityBehavior(items: [self])
-			}
-			
-			return self._gravityBehaviour!
-		}
-	}
-	
 	var pushBehaviour: UIPushBehavior {
 		set {
 			self._pushBehaviour = newValue
@@ -125,8 +106,8 @@ class DataEntryFormSetup: UIView {
 		}
 	}
     
-    //These three consistent and can be added to the dynamic animator at will
-    var snapBehaviour: UISnapBehavior {
+    //Reusable dynamic behaviours
+	var snapBehaviour: UISnapBehavior {
 		get {
 			if _snapBehaviour == nil {
 				self._snapBehaviour = UISnapBehavior(item: self, snapToPoint: DataEntryFormSetup.keyWindow.center)
@@ -142,53 +123,64 @@ class DataEntryFormSetup: UIView {
 			_snapBehaviour = newValue
 		}
     }
-    
+	
     var noRotation: UIDynamicItemBehavior {
         let noRot = UIDynamicItemBehavior(items: [self])
         noRot.allowsRotation = false
         return noRot
     }
-    
+	
+	var gravityBehaviour: UIGravityBehavior {
+		set {
+			self._gravityBehaviour = newValue
+		}
+		
+		get {
+			if self._gravityBehaviour == nil {
+				self._gravityBehaviour = UIGravityBehavior(items: [self])
+			}
+			
+			return self._gravityBehaviour!
+		}
+	}
+	
+	private var _resistanceBehaviour: UIDynamicItemBehavior?
     var resistanceBehaviour: UIDynamicItemBehavior {
-        let resist = UIDynamicItemBehavior(items: [self])
-        resist.resistance = 10.0
-        return resist
+		if _resistanceBehaviour == nil {
+			_resistanceBehaviour = UIDynamicItemBehavior(items: [self])
+		}
+        _resistanceBehaviour!.resistance = 10.0
+        return _resistanceBehaviour!
     }
 	
-	private var _snapBehaviour: UISnapBehavior?
-	private var _pushBehaviour: UIPushBehavior?
-	private var _gravityBehaviour: UIGravityBehavior?
-    
-    //MARK: Other Variables
-    var tempImage: UIImageView!
-    
-    var cancelButton = UIButton.buttonWithType(.System) as! UIButton
-    var doneButton = UIButton.buttonWithType(.System) as! UIButton
-    
     
     //MARK: Class Variables
     static var keyWindow: UIWindow = {
         return UIApplication.sharedApplication().keyWindow
         }()!
-    
-    class var selfHeight: CGFloat {
-        return self.selfWidth
-    }
-    
-    class var selfWidth: CGFloat {
-        if DataEntryFormSetup.keyWindow.frame.size.width * 0.95 < 300 {
-            return DataEntryFormSetup.keyWindow.frame.size.width * 0.95
-        } else {
-            return 300
-        }
-    }
-    
     static var blurredBackgroundImage: UIImage {
         let snapshot = self.keyWindow.takeSnapshot()
 		let blurredSnapshot = snapshot.applyDarkEffect()
         
         return blurredSnapshot!
     }
+	
+	//MARK: Variables designed to be altered
+	var formTitle: String?
+	var formType: DataEntryFormSetupType
+	var delegate: DataEntryFormSetupDelegate?
+	
+	var needsBackground = true //by default this is true; a DataEntrySetupController may override this if it is providing its own background
+	var backgroundNeedsRefresh = true //override this to force a screenshot to be taken again
+	var shouldBounce = true //a DataEntrySetupController may override this to make animating between views look better
+	
+	var contentView: UIView {
+		if _contentView == nil {
+			_contentView = UIView()
+			_contentView?.setTranslatesAutoresizingMaskIntoConstraints(false)
+		}
+		return _contentView!
+	}
     
     
     //MARK: - Initialisers
@@ -196,16 +188,23 @@ class DataEntryFormSetup: UIView {
         self.formTitle = title
         self.delegate = delegate
         self.formType = type
-        
-        super.init(frame: CGRectMake(0, 0, DataEntryFormSetup.selfWidth, DataEntryFormSetup.selfHeight))
-        
-        self.drawView()
-        
-        self.backgroundColor = .clearColor()
-        self.layer.cornerRadius = 20.0
-        self.clipsToBounds = true
 		
-		self.insertSubview(self.contentBackground, atIndex: 0)
+		var firstSize: CGFloat = 0.0
+		
+		if DataEntryFormSetup.keyWindow.frame.size.width * 0.95 < 300 {
+			firstSize = DataEntryFormSetup.keyWindow.frame.size.width * 0.95
+		} else {
+			firstSize = 300.0
+		}
+		
+        super.init(frame: CGRectMake(0, 0, firstSize, firstSize))
+        
+		self.backgroundColor = .clearColor()
+		self.layer.cornerRadius = 20.0
+		self.clipsToBounds = true
+		
+		self.firstDrawView()
+		self.drawView()
 		
 		NSNotificationCenter.defaultCenter().addObserver(self, selector: "deviceDidRotate", name: UIDeviceOrientationDidChangeNotification, object: nil)
         
@@ -243,7 +242,8 @@ class DataEntryFormSetup: UIView {
 	
 	//MARK: - Handle Rotation
 	func deviceDidRotate() {
-		println("Device did rotate")
+		self.firstDrawViewUpdate()
+		
 		self.animator?.removeAllBehaviors()
 		self.snapBehaviour = UISnapBehavior(item: self, snapToPoint: DataEntryFormSetup.keyWindow.center)
 		self.animator?.addBehavior(self.snapBehaviour)
@@ -254,6 +254,80 @@ class DataEntryFormSetup: UIView {
     func drawView() {
         
     }
+	
+	func drawViewUpdate() {
+		
+	}
+	
+	private func firstDrawViewUpdate() {
+		//Change to the preferred height, making sure it will fit in the view
+		var newFrame = self.frame
+		
+		if self.preferredViewHeight() < DataEntryFormSetup.keyWindow.frame.size.height {
+			newFrame.size.height = self.preferredViewHeight()
+		} else {
+			newFrame.size.height = DataEntryFormSetup.keyWindow.frame.size.height
+		}
+		
+		self.frame = newFrame
+	}
+	
+	final func firstDrawView() {
+		self.firstDrawViewUpdate()
+		
+		//Add the blur background
+		self.insertSubview(self.contentBackground, atIndex: 0)
+		
+		var constraints = Array<AnyObject>()
+		var viewsDict: Dictionary<String, UIView> = ["contentBackground" : self.contentBackground]
+		
+		constraints += NSLayoutConstraint.constraintsWithVisualFormat("H:|[contentBackground]|", options: nil, metrics: nil, views: viewsDict)
+		constraints += NSLayoutConstraint.constraintsWithVisualFormat("V:|[contentBackground]|", options: nil, metrics: nil, views: viewsDict)
+		
+		self.addConstraints(constraints)
+		
+		
+		//Now set up the content view and the cancel/done buttons
+		cancelButton.setTitle("Cancel", forState: .Normal)
+		doneButton.setTitle("Done", forState: .Normal)
+		
+		cancelButton.setTranslatesAutoresizingMaskIntoConstraints(false)
+		doneButton.setTranslatesAutoresizingMaskIntoConstraints(false)
+		
+		cancelButton.addTarget(self, action: "cancelButtonPressed:", forControlEvents: .TouchUpInside)
+		doneButton.addTarget(self, action: "doneButtonPressed:", forControlEvents: .TouchUpInside)
+		
+		let spacerX = UIView()
+		let spacerY = UIView()
+		
+		spacerX.backgroundColor = .grayColor()
+		spacerY.backgroundColor = .grayColor()
+		
+		spacerX.setTranslatesAutoresizingMaskIntoConstraints(false)
+		spacerY.setTranslatesAutoresizingMaskIntoConstraints(false)
+		
+		self.contentBackground.addSubview(self.cancelButton)
+		self.contentBackground.addSubview(self.doneButton)
+		self.contentBackground.addSubview(spacerX)
+		self.contentBackground.addSubview(spacerY)
+		self.contentBackground.addSubview(self.contentView)
+		
+		
+		//Then create the constraints for these
+		constraints = Array<AnyObject>()
+		viewsDict = ["contentView" : self.contentView, "cancelButton" : self.cancelButton, "doneButton" : self.doneButton, "spacerX" : spacerX, "spacerY" : spacerY]
+		let metricsDict = ["buttonHeight" : 50]
+		
+		constraints += NSLayoutConstraint.constraintsWithVisualFormat("H:|[contentView]|", options: nil, metrics: nil, views: viewsDict)
+		constraints += NSLayoutConstraint.constraintsWithVisualFormat("H:|[spacerX]|", options: nil, metrics: nil, views: viewsDict)
+		constraints += NSLayoutConstraint.constraintsWithVisualFormat("H:|[cancelButton][spacerY(1)][doneButton(cancelButton)]|", options: .AlignAllCenterY, metrics: nil, views: viewsDict)
+		
+		constraints += NSLayoutConstraint.constraintsWithVisualFormat("V:|[contentView][spacerX(1)][spacerY(buttonHeight)]|", options: nil, metrics: metricsDict, views: viewsDict)
+		constraints += NSLayoutConstraint.constraintsWithVisualFormat("V:[spacerX][cancelButton]|", options: nil, metrics: nil, views: viewsDict)
+		constraints += NSLayoutConstraint.constraintsWithVisualFormat("V:[spacerX][doneButton]|", options: nil, metrics: nil, views: viewsDict)
+		
+		self.contentBackground.addConstraints(constraints)
+	}
     
     //MARK: - Display
     final func show(animationType: DataEntryFormAnimationType) {
@@ -294,7 +368,6 @@ class DataEntryFormSetup: UIView {
 			
 		}, completion: { (Bool) -> Void in
 			self.tempImage.removeFromSuperview()
-			self.createDoneCancelButtons()
 			
 			if self.needsBackground {
 				self.backgroundImageView.alpha = 0.2
@@ -383,23 +456,8 @@ class DataEntryFormSetup: UIView {
             })
         })
     }
-    
-    
-    
+	
     //MARK: - Done and Cancel Buttons
-    final func createDoneCancelButtons() {
-        cancelButton.setTitle("Cancel", forState: .Normal)
-        doneButton.setTitle("Done", forState: .Normal)
-        
-        cancelButton.setTranslatesAutoresizingMaskIntoConstraints(false)
-        doneButton.setTranslatesAutoresizingMaskIntoConstraints(false)
-        
-        cancelButton.addTarget(self, action: "cancelButtonPressed:", forControlEvents: .TouchUpInside)
-        doneButton.addTarget(self, action: "doneButtonPressed:", forControlEvents: .TouchUpInside)
-        
-		
-    }
-    
     func cancelButtonPressed(sender: AnyObject) {
         self.delegate?.dataEntryFormSetupDidCancel(self)
     }
@@ -407,4 +465,13 @@ class DataEntryFormSetup: UIView {
     func doneButtonPressed(sender: AnyObject) {
         self.delegate?.dataEntryFormSetupDidCancel(self)
     }
+	
+	//MARK: - Height
+	func preferredViewHeight() -> CGFloat {
+		if DataEntryFormSetup.keyWindow.frame.size.width * 0.95 < 300 {
+			return DataEntryFormSetup.keyWindow.frame.size.width * 0.95
+		} else {
+			return 300.0
+		}
+	}
 }
