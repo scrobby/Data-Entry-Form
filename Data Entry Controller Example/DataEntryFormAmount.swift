@@ -9,11 +9,11 @@
 import Foundation
 import UIKit
 
-enum DataEntryFormSetupAmountOption {
+enum DataEntryFormAmountOption {
 	case UseCurrency
 }
 
-class DataEntryFormSetupAmount: DataEntryFormSetup {
+class DataEntryFormAmount: DataEntryForm {
 	var topLabel = UILabel()
 	
 	var backgroundView = UIView()
@@ -39,11 +39,11 @@ class DataEntryFormSetupAmount: DataEntryFormSetup {
 	}
 	
 	//MARK: - Initialisation
-	convenience init(title: String?, delegate: DataEntryFormSetupDelegate) {
+	convenience init(title: String?, delegate: DataEntryFormDelegate) {
 		self.init(title: title, type: .Amount, delegate: delegate)
 	}
 	
-	required init(title: String?, type: DataEntryFormSetupType, delegate: DataEntryFormSetupDelegate) {
+	required init(title: String?, type: DataEntryFormType, delegate: DataEntryFormDelegate) {
 		super.init(title: title, type: type, delegate: delegate)
 	}
 	
@@ -138,9 +138,9 @@ class DataEntryFormSetupAmount: DataEntryFormSetup {
 		
 		
 		//Vertical Constraints
-		constraints += NSLayoutConstraint.constraintsWithVisualFormat("V:[_7][_4(_7)][_1(_4)][_negative(_1)]-exteriorSpacing-|", options: .AlignAllCenterX, metrics: metrics, views: viewsDict)
-		constraints += NSLayoutConstraint.constraintsWithVisualFormat("V:[_8][_5(_8)][_2(_5)][_0(_2)]-exteriorSpacing-|", options: .AlignAllCenterX, metrics: metrics, views: viewsDict)
-		constraints += NSLayoutConstraint.constraintsWithVisualFormat("V:[_9][_6(_9)][_3(_6)][_Delete(_3)]-exteriorSpacing-|", options: .AlignAllCenterX, metrics: metrics, views: viewsDict)
+		constraints += NSLayoutConstraint.constraintsWithVisualFormat("V:[_7][_4(_7)][_1(_4)][_negative(_1)]-0-|", options: .AlignAllCenterX, metrics: metrics, views: viewsDict)
+		constraints += NSLayoutConstraint.constraintsWithVisualFormat("V:[_8][_5(_8)][_2(_5)][_0(_2)]-0-|", options: .AlignAllCenterX, metrics: metrics, views: viewsDict)
+		constraints += NSLayoutConstraint.constraintsWithVisualFormat("V:[_9][_6(_9)][_3(_6)][_Delete(_3)]-0-|", options: .AlignAllCenterX, metrics: metrics, views: viewsDict)
 		
 		self.contentView.addConstraints(constraints)
 		backgroundView.addConstraints(constraints2)
@@ -156,6 +156,8 @@ class DataEntryFormSetupAmount: DataEntryFormSetup {
 		
 		butt.setTitleColor(self.tintColor, forState: .Normal)
 		butt.titleLabel!.font = UIFont.systemFontOfSize(40.0, weight: UIFontWeightThin)
+		
+		butt.backgroundColor = UIColor(white: 0.8, alpha: 0.9)
 		
 		if buttonTag == 10 || buttonTag == 11 {
 			butt.titleLabel?.font = UIFont.systemFontOfSize(25.0, weight: UIFontWeightRegular)
@@ -175,14 +177,14 @@ class DataEntryFormSetupAmount: DataEntryFormSetup {
 		println("Done button pressed")
 		
 		if self.isPositive {
-			self.delegate?.dataEntryFormSetupAmountDidFinish!(self.currentAmount, setup: self)
+			self.delegate?.DataEntryFormAmountDidFinish!(self.currentAmount, setup: self)
 		} else {
-			self.delegate?.dataEntryFormSetupAmountDidFinish!(self.currentAmount * -1, setup: self)
+			self.delegate?.DataEntryFormAmountDidFinish!(self.currentAmount * -1, setup: self)
 		}
 	}
 	
 	override func cancelButtonPressed(sender: AnyObject) {
-		super.delegate?.dataEntryFormSetupDidCancel(self)
+		super.delegate?.DataEntryFormDidCancel(self)
 	}
 	
 	func numberButtonPressed(sender: AnyObject) {
@@ -225,9 +227,9 @@ class DataEntryFormSetupAmount: DataEntryFormSetup {
 			var displayString = String()
 			
 			if isPositive {
-				displayString = DataEntryFormSetupAmount.currencyIndicator
+				displayString = DataEntryFormAmount.currencyIndicator
 			} else {
-				displayString = "-\(DataEntryFormSetupAmount.currencyIndicator)"
+				displayString = "-\(DataEntryFormAmount.currencyIndicator)"
 			}
 			
 			var counter = 0
@@ -236,23 +238,23 @@ class DataEntryFormSetupAmount: DataEntryFormSetup {
 				if self.displayAmount.count == 2 {
 					displayString += "0"
 				} else if self.displayAmount.count == 1 {
-					displayString += "0\(DataEntryFormSetupAmount.decimalSeparator)0"
+					displayString += "0\(DataEntryFormAmount.decimalSeparator)0"
 				}
 			}
 			
 			for value in self.displayAmount {
 				//add decimal point if this is to be the penultimate number
 				if self.displayAmount.count - counter == 2 {
-					displayString += DataEntryFormSetupAmount.decimalSeparator
+					displayString += DataEntryFormAmount.decimalSeparator
 				}
 				
 				//add a thousands separator if necessary
 				if self.displayAmount.count - counter == 5 && self.displayAmount.count > 5 {
-					displayString += DataEntryFormSetupAmount.thousandsSeparator
+					displayString += DataEntryFormAmount.thousandsSeparator
 				}
 				
 				if self.displayAmount.count - counter == 8 && self.displayAmount.count > 8 {
-					displayString += DataEntryFormSetupAmount.thousandsSeparator
+					displayString += DataEntryFormAmount.thousandsSeparator
 				}
 				
 				displayString += "\(value)"
@@ -262,7 +264,7 @@ class DataEntryFormSetupAmount: DataEntryFormSetup {
 			
 			self.topLabel.text = displayString
 			
-			let stringMinusCurrency = displayString.stringByReplacingOccurrencesOfString(DataEntryFormSetupAmount.currencyIndicator, withString: "", options: .CaseInsensitiveSearch, range: nil).stringByReplacingOccurrencesOfString(DataEntryFormSetupAmount.decimalSeparator, withString: ".", options: .CaseInsensitiveSearch, range: nil).stringByReplacingOccurrencesOfString(DataEntryFormSetupAmount.thousandsSeparator, withString: "", options: .CaseInsensitiveSearch, range: nil)
+			let stringMinusCurrency = displayString.stringByReplacingOccurrencesOfString(DataEntryFormAmount.currencyIndicator, withString: "", options: .CaseInsensitiveSearch, range: nil).stringByReplacingOccurrencesOfString(DataEntryFormAmount.decimalSeparator, withString: ".", options: .CaseInsensitiveSearch, range: nil).stringByReplacingOccurrencesOfString(DataEntryFormAmount.thousandsSeparator, withString: "", options: .CaseInsensitiveSearch, range: nil)
 			
 			if let newAmountValue = stringMinusCurrency.floatValue {
 				if self.isPositive {
@@ -275,7 +277,7 @@ class DataEntryFormSetupAmount: DataEntryFormSetup {
 			}
 			
 		} else {
-			self.topLabel.text = "\(DataEntryFormSetupAmount.currencyIndicator)0\(DataEntryFormSetupAmount.decimalSeparator)00"
+			self.topLabel.text = "\(DataEntryFormAmount.currencyIndicator)0\(DataEntryFormAmount.decimalSeparator)00"
 		}
 	}
 	

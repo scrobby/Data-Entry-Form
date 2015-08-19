@@ -13,11 +13,12 @@
 		C304EA761B7A52A8006885A6 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C304EA751B7A52A8006885A6 /* Images.xcassets */; };
 		C304EA791B7A52A8006885A6 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = C304EA771B7A52A8006885A6 /* LaunchScreen.xib */; };
 		C304EA851B7A52A8006885A6 /* Data_Entry_Controller_ExampleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C304EA841B7A52A8006885A6 /* Data_Entry_Controller_ExampleTests.swift */; };
-		C31AE16D1B7DEF1000D6A965 /* DataEntryFormSetup.swift in Sources */ = {isa = PBXBuildFile; fileRef = C31AE16C1B7DEF1000D6A965 /* DataEntryFormSetup.swift */; };
+		C31AE16D1B7DEF1000D6A965 /* DataEntryForm.swift in Sources */ = {isa = PBXBuildFile; fileRef = C31AE16C1B7DEF1000D6A965 /* DataEntryForm.swift */; };
 		C31AE1761B7E11DB00D6A965 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C31AE1751B7E11DB00D6A965 /* Extensions.swift */; };
 		C31AE1781B7E1E5F00D6A965 /* UIImageEffects.swift in Sources */ = {isa = PBXBuildFile; fileRef = C31AE1771B7E1E5F00D6A965 /* UIImageEffects.swift */; };
-		C31AE17A1B7E34EA00D6A965 /* DataEntryFormSetupAmount.swift in Sources */ = {isa = PBXBuildFile; fileRef = C31AE1791B7E34EA00D6A965 /* DataEntryFormSetupAmount.swift */; };
-		C3F3BB791B83707C00A6FF91 /* DataEntryFormSetupText.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3F3BB781B83707C00A6FF91 /* DataEntryFormSetupText.swift */; };
+		C31AE17A1B7E34EA00D6A965 /* DataEntryFormAmount.swift in Sources */ = {isa = PBXBuildFile; fileRef = C31AE1791B7E34EA00D6A965 /* DataEntryFormAmount.swift */; };
+		C3F3BB791B83707C00A6FF91 /* DataEntryFormText.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3F3BB781B83707C00A6FF91 /* DataEntryFormText.swift */; };
+		C3F3BB7B1B8485C700A6FF91 /* DataEntryFormDate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3F3BB7A1B8485C700A6FF91 /* DataEntryFormDate.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -41,12 +42,13 @@
 		C304EA7E1B7A52A8006885A6 /* Data Entry Controller ExampleTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Data Entry Controller ExampleTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		C304EA831B7A52A8006885A6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		C304EA841B7A52A8006885A6 /* Data_Entry_Controller_ExampleTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Data_Entry_Controller_ExampleTests.swift; sourceTree = "<group>"; };
-		C31AE16C1B7DEF1000D6A965 /* DataEntryFormSetup.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = DataEntryFormSetup.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
+		C31AE16C1B7DEF1000D6A965 /* DataEntryForm.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = DataEntryForm.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		C31AE1701B7E11B300D6A965 /* Data Entry Controller Example-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Data Entry Controller Example-Bridging-Header.h"; sourceTree = "<group>"; };
 		C31AE1751B7E11DB00D6A965 /* Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		C31AE1771B7E1E5F00D6A965 /* UIImageEffects.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIImageEffects.swift; sourceTree = "<group>"; };
-		C31AE1791B7E34EA00D6A965 /* DataEntryFormSetupAmount.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataEntryFormSetupAmount.swift; sourceTree = "<group>"; };
-		C3F3BB781B83707C00A6FF91 /* DataEntryFormSetupText.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataEntryFormSetupText.swift; sourceTree = "<group>"; };
+		C31AE1791B7E34EA00D6A965 /* DataEntryFormAmount.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataEntryFormAmount.swift; sourceTree = "<group>"; };
+		C3F3BB781B83707C00A6FF91 /* DataEntryFormText.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataEntryFormText.swift; sourceTree = "<group>"; };
+		C3F3BB7A1B8485C700A6FF91 /* DataEntryFormDate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataEntryFormDate.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -129,9 +131,10 @@
 		C304EA8E1B7A52DE006885A6 /* Data Entry */ = {
 			isa = PBXGroup;
 			children = (
-				C31AE16C1B7DEF1000D6A965 /* DataEntryFormSetup.swift */,
-				C31AE1791B7E34EA00D6A965 /* DataEntryFormSetupAmount.swift */,
-				C3F3BB781B83707C00A6FF91 /* DataEntryFormSetupText.swift */,
+				C31AE16C1B7DEF1000D6A965 /* DataEntryForm.swift */,
+				C31AE1791B7E34EA00D6A965 /* DataEntryFormAmount.swift */,
+				C3F3BB781B83707C00A6FF91 /* DataEntryFormText.swift */,
+				C3F3BB7A1B8485C700A6FF91 /* DataEntryFormDate.swift */,
 				C31AE1751B7E11DB00D6A965 /* Extensions.swift */,
 			);
 			name = "Data Entry";
@@ -245,13 +248,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C31AE17A1B7E34EA00D6A965 /* DataEntryFormSetupAmount.swift in Sources */,
+				C3F3BB7B1B8485C700A6FF91 /* DataEntryFormDate.swift in Sources */,
+				C31AE17A1B7E34EA00D6A965 /* DataEntryFormAmount.swift in Sources */,
 				C31AE1781B7E1E5F00D6A965 /* UIImageEffects.swift in Sources */,
 				C31AE1761B7E11DB00D6A965 /* Extensions.swift in Sources */,
 				C304EA711B7A52A8006885A6 /* ViewController.swift in Sources */,
-				C3F3BB791B83707C00A6FF91 /* DataEntryFormSetupText.swift in Sources */,
+				C3F3BB791B83707C00A6FF91 /* DataEntryFormText.swift in Sources */,
 				C304EA6F1B7A52A8006885A6 /* AppDelegate.swift in Sources */,
-				C31AE16D1B7DEF1000D6A965 /* DataEntryFormSetup.swift in Sources */,
+				C31AE16D1B7DEF1000D6A965 /* DataEntryForm.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

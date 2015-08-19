@@ -1,5 +1,5 @@
 //
-//  DataEntryFormSetupText.swift
+//  DataEntryFormText.swift
 //  Data Entry Controller Example
 //
 //  Created by Carl Goldsmith on 18/08/2015.
@@ -9,12 +9,12 @@
 import Foundation
 import UIKit
 
-class DataEntryFormSetupText: DataEntryFormSetup {
+class DataEntryFormText: DataEntryForm {
 	let viewHeight: CGFloat = 70.0
 	var textBox = UITextField()
 	
 	//MARK: - Initialisers
-	convenience init(title: String, delegate: DataEntryFormSetupDelegate, placeholder: String) {
+	convenience init(title: String, delegate: DataEntryFormDelegate, placeholder: String) {
 		self.init(title: title, type: .Text, delegate: delegate)
 		
 		self.textBox.placeholder = placeholder
@@ -25,7 +25,7 @@ class DataEntryFormSetupText: DataEntryFormSetup {
 		self.contentView.backgroundColor = UIColor(white: 1.0, alpha: 0.7)
 	}
 	
-	required init(title: String?, type: DataEntryFormSetupType, delegate: DataEntryFormSetupDelegate) {
+	required init(title: String?, type: DataEntryFormType, delegate: DataEntryFormDelegate) {
 		super.init(title: title, type: type, delegate: delegate)
 	}
 	
@@ -56,6 +56,11 @@ class DataEntryFormSetupText: DataEntryFormSetup {
 	
 	override func willDisappear() {
 		self.textBox.resignFirstResponder()
+	}
+	
+	//MARK: - Done/Cancel
+	override func doneButtonPressed(sender: AnyObject) {
+		self.delegate?.DataEntryFormTextDidFinish?(self.textBox.text, setup: self)
 	}
 	
 	//MARK: - Overrides

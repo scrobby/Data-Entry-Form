@@ -27,13 +27,14 @@ SOFTWARE.
 import Foundation
 import UIKit
 
-enum DataEntryFormSetupType {
+enum DataEntryFormType {
     case Amount
     case Text
     case Date
+	case Custom
 }
 
-enum DataEntryFormSetupError {
+enum DataEntryFormError {
     case noViewToBecomeInactive
 }
 
@@ -44,12 +45,16 @@ enum DataEntryFormAnimationType {
     case Left
 }
 
-@objc protocol DataEntryFormSetupDelegate {
-    func dataEntryFormSetupDidCancel(setup: DataEntryFormSetup)
-	optional func dataEntryFormSetupAmountDidFinish(amount: Float, setup: DataEntryFormSetup)
+@objc protocol DataEntryFormDelegate {
+    func DataEntryFormDidCancel(setup: DataEntryForm)
+	optional func DataEntryFormAmountDidFinish(amount: Float, setup: DataEntryForm)
+	optional func DataEntryFormTextDidFinish(text: String, setup: DataEntryForm)
+	optional func DataEntryFormDateDidFinish(date: NSDate, setup: DataEntryForm)
+	
+	optional func DataEntryFormCustomDidFinish(payload: Dictionary<String, AnyObject>, setup: DataEntryForm)
 }
 
-class DataEntryFormSetup: UIView {
+class DataEntryForm: UIView {
 	//MARK: Private Variables
 	private var _contentBackground: UIVisualEffectView?
 	private var contentBackground: UIVisualEffectView {
@@ -64,7 +69,7 @@ class DataEntryFormSetup: UIView {
 	private var _backgroundImageView: UIImageView?
 	private var backgroundImageView: UIImageView {
 		if self._backgroundImageView == nil {
-			self._backgroundImageView = UIImageView(frame: DataEntryFormSetup.keyWindow.bounds)
+			self._backgroundImageView = UIImageView(frame: DataEntryForm.keyWindow.bounds)
 		}
 		
 		self._backgroundImageView?.backgroundColor = .blackColor()
@@ -94,7 +99,7 @@ class DataEntryFormSetup: UIView {
 	
 	//Useful Variables
 	var keyWindow: UIWindow {
-		return DataEntryFormSetup.keyWindow
+		return DataEntryForm.keyWindow
 	}
 	
 	var isShowing = false
@@ -119,7 +124,7 @@ class DataEntryFormSetup: UIView {
 	var snapBehaviour: UISnapBehavior {
 		get {
 			if _snapBehaviour == nil {
-				self._snapBehaviour = UISnapBehavior(item: self, snapToPoint: DataEntryFormSetup.keyWindow.center)
+				self._snapBehaviour = UISnapBehavior(item: self, snapToPoint: DataEntryForm.keyWindow.center)
 				self._snapBehaviour?.damping = snapBehaviourDamping
 				
 				return self._snapBehaviour!
@@ -160,8 +165,8 @@ class DataEntryFormSetup: UIView {
 	
 	//MARK: Variables designed to be altered
 	var formTitle: String?
-	var formType: DataEntryFormSetupType
-	var delegate: DataEntryFormSetupDelegate?
+	var formType: DataEntryFormType
+	var delegate: DataEntryFormDelegate?
 	
 	var needsBackground = true //by default this is true; a DataEntrySetupController may override this if it is providing its own background
 	var backgroundNeedsRefresh = true //override this to force a screenshot to be taken again
@@ -177,15 +182,15 @@ class DataEntryFormSetup: UIView {
     
     
     //MARK: - Initialisers
-    required init(title: String?, type: DataEntryFormSetupType, delegate: DataEntryFormSetupDelegate) {
+    required init(title: String?, type: DataEntryFormType, delegate: DataEntryFormDelegate) {
         self.formTitle = title
         self.delegate = delegate
         self.formType = type
 		
 		var firstSize: CGFloat = 0.0
 		
-		if DataEntryFormSetup.keyWindow.frame.size.width * 0.95 < 300 {
-			firstSize = DataEntryFormSetup.keyWindow.frame.size.width * 0.95
+		if DataEntryForm.keyWindow.frame.size.width * 0.95 < 300 {
+			firstSize = DataEntryForm.keyWindow.frame.size.width * 0.95
 		} else {
 			firstSize = 300.0
 		}
@@ -199,16 +204,20 @@ class DataEntryFormSetup: UIView {
 		self.firstDrawView()
 		self.drawView()
 		
-		NSNotificationCenter.defaultCenter().addObserver(self, selector: "deviceDidRotate", name: UIDeviceOrientationDidChangeNotification, object: nil)
-		NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardShowing:", name: UIKeyboardWillShowNotification, object: nil)
-		NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardHiding:", name: UIKeyboardWillHideNotification, object: nil)
+		self.contentView.backgroundColor = UIColor(white: 1.0, alpha: 0.8)
         
         //ANY INITIAL VISUAL UPDATES MUST BE DONE BEFORE THIS POINT
         
         let image = self.takeSnapshot()
         self.tempImage = UIImageView(image: image)
         self.tempImage.frame = self.bounds
+		self.tempImage.tag = 432
         self.addSubview(tempImage)
+		
+		
+		NSNotificationCenter.defaultCenter().addObserver(self, selector: "deviceDidRotate", name: UIDeviceOrientationDidChangeNotification, object: nil)
+		NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardShowing:", name: UIKeyboardWillShowNotification, object: nil)
+		NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardHiding:", name: UIKeyboardWillHideNotification, object: nil)
     }
     
     required init(coder aDecoder: NSCoder) {
@@ -263,6 +272,7 @@ class DataEntryFormSetup: UIView {
 		self.firstDrawViewUpdate()
 		
 		//Add the blur background
+		self.contentBackground.tag = 432
 		self.insertSubview(self.contentBackground, atIndex: 0)
 		
 		var constraints = Array<AnyObject>()
@@ -352,20 +362,20 @@ class DataEntryFormSetup: UIView {
         self.animator?.addBehavior(self.noRotation)
         self.animator?.addBehavior(self.resistanceBehaviour)
 		
-        UIView.animateWithDuration(0.5, animations: { () -> Void in
+		UIView.animateWithDuration(0.5, animations: { () -> Void in
 			
-		}, completion: { (Bool) -> Void in
-			self.tempImage.removeFromSuperview()
-			
-			if self.needsBackground {
-				self.backgroundImageView.alpha = 0.2
-			}
-			
-			self.isShowing = false
-			self.didShow()
-        })
-    }
-    
+			}, completion: { (Bool) -> Void in
+				self.tempImage.removeFromSuperview()
+				
+				if self.needsBackground {
+					self.backgroundImageView.alpha = 0.2
+				}
+				
+				self.isShowing = false
+				self.didShow()
+		})
+	}
+	
     final func dismiss(animationType: DataEntryFormAnimationType) {
 		self.isDisappearing = true
 		self.willDisappear()
@@ -373,6 +383,7 @@ class DataEntryFormSetup: UIView {
         let image = self.takeSnapshot()
         self.tempImage = UIImageView(image: image)
         self.tempImage.frame = self.bounds
+		self.tempImage.tag = 432
         self.addSubview(tempImage)
         
         self.animator?.removeAllBehaviors()
@@ -471,11 +482,11 @@ class DataEntryFormSetup: UIView {
 	
     //MARK: - Done and Cancel Buttons
     func cancelButtonPressed(sender: AnyObject) {
-        self.delegate?.dataEntryFormSetupDidCancel(self)
+        self.delegate?.DataEntryFormDidCancel(self)
     }
     
     func doneButtonPressed(sender: AnyObject) {
-        self.delegate?.dataEntryFormSetupDidCancel(self)
+        self.delegate?.DataEntryFormDidCancel(self)
     }
 	
 	//MARK: - Methods Designed for Overriding
@@ -498,5 +509,38 @@ class DataEntryFormSetup: UIView {
 	
 	func gravityMagnitude() -> CGFloat {
 		return 0.06 * (self.preferredViewHeight() + 100)
+	}
+	
+	//To try and stop unwanted additions
+	override func addSubview(view: UIView) {
+		if view.tag != 432 {
+			println("Views and constraints must be added to contentView, not to self.")
+		}
+		
+		super.addSubview(view)
+	}
+	
+	override func insertSubview(view: UIView, aboveSubview siblingSubview: UIView) {
+		if view.tag != 432 {
+			println("Views and constraints must be added to contentView, not to self.")
+		}
+		
+		super.insertSubview(view, aboveSubview: siblingSubview)
+	}
+	
+	override func insertSubview(view: UIView, atIndex index: Int) {
+		if view.tag != 432 {
+			println("Views and constraints must be added to contentView, not to self.")
+		}
+		
+		super.insertSubview(view, atIndex: index)
+	}
+	
+	override func insertSubview(view: UIView, belowSubview siblingSubview: UIView) {
+		if view.tag != 432 {
+			println("Views and constraints must be added to contentView, not to self.")
+		}
+		
+		super.insertSubview(view, belowSubview: siblingSubview)
 	}
 }

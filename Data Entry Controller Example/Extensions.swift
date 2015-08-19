@@ -66,7 +66,7 @@ extension Float {
 	var currencyStringValue: String {
 		let numberFormatter = NSNumberFormatter()
 		numberFormatter.numberStyle = .CurrencyStyle
-		//		numberFormatter.currencySymbol = DataEntryFormSetupAmount.currencyIndicator
+		//		numberFormatter.currencySymbol = DataEntryFormAmount.currencyIndicator
 		let debtString = numberFormatter.stringFromNumber(NSNumber(float: self))
 		
 		return debtString!
