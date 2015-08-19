@@ -205,15 +205,12 @@ class DataEntryForm: UIView {
 		self.drawView()
 		
 		self.contentView.backgroundColor = UIColor(white: 1.0, alpha: 0.8)
-        
-        //ANY INITIAL VISUAL UPDATES MUST BE DONE BEFORE THIS POINT
-        
-        let image = self.takeSnapshot()
-        self.tempImage = UIImageView(image: image)
-        self.tempImage.frame = self.bounds
-		self.tempImage.tag = 432
-        self.addSubview(tempImage)
 		
+		let image = self.takeSnapshot()
+		self.tempImage = UIImageView(image: image)
+		self.tempImage.frame = self.bounds
+		self.tempImage.tag = 432
+		self.addSubview(tempImage)
 		
 		NSNotificationCenter.defaultCenter().addObserver(self, selector: "deviceDidRotate", name: UIDeviceOrientationDidChangeNotification, object: nil)
 		NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardShowing:", name: UIKeyboardWillShowNotification, object: nil)
@@ -331,10 +328,11 @@ class DataEntryForm: UIView {
 		self.isShowing = true
 		self.willShow()
 		
+		keyWindow.addSubview(self)
+		
 		if needsBackground {
-			keyWindow.addSubview(self.backgroundImageView)
+			keyWindow.insertSubview(self.backgroundImageView, belowSubview: self)
 			self.backgroundImageView.alpha = 0.0
-			println(self.backgroundImageView.alpha)
 		}
         
         switch animationType {
@@ -352,8 +350,6 @@ class DataEntryForm: UIView {
             break
         }
 		
-        keyWindow.addSubview(self)
-        
         if self.animator == nil {
             self.animator = UIDynamicAnimator(referenceView: keyWindow)
         }
@@ -363,13 +359,11 @@ class DataEntryForm: UIView {
         self.animator?.addBehavior(self.resistanceBehaviour)
 		
 		UIView.animateWithDuration(0.5, animations: { () -> Void in
-			
+			if self.needsBackground {
+				self.backgroundImageView.alpha = 0.2
+			}
 			}, completion: { (Bool) -> Void in
 				self.tempImage.removeFromSuperview()
-				
-				if self.needsBackground {
-					self.backgroundImageView.alpha = 0.2
-				}
 				
 				self.isShowing = false
 				self.didShow()
@@ -378,12 +372,16 @@ class DataEntryForm: UIView {
 	
     final func dismiss(animationType: DataEntryFormAnimationType) {
 		self.isDisappearing = true
-		self.willDisappear()
-        
-        let image = self.takeSnapshot()
-        self.tempImage = UIImageView(image: image)
-        self.tempImage.frame = self.bounds
+		
+		let image = self.takeSnapshot()
+		self.tempImage = UIImageView(image: image)
+		self.tempImage.frame = self.bounds
 		self.tempImage.tag = 432
+		
+		self.willDisappear()
+		
+		self.removeAllSubviews()
+		
         self.addSubview(tempImage)
         
         self.animator?.removeAllBehaviors()
@@ -403,27 +401,28 @@ class DataEntryForm: UIView {
             break
         case .Right:
             self.pushBehaviour.setAngle(180.degreesToRadians, magnitude: pushMagnitude()/2)
-            self.gravityBehaviour.setAngle(0, magnitude: gravityMagnitude()/2)
-            break
-        default:
-            break
+			self.gravityBehaviour.setAngle(0, magnitude: gravityMagnitude()/2)
+			break
+		default:
+			break
 		}
 		
-		if shouldBounce {
+		if self.shouldBounce {
 			self.animator?.addBehavior(self.pushBehaviour)
 		}
-        self.animator?.addBehavior(self.gravityBehaviour)
+		self.animator?.addBehavior(self.gravityBehaviour)
 		
-        self.pushBehaviour.active = true
+		self.pushBehaviour.active = true
+		
 		
 		if self.needsBackground {
 			UIView.animateWithDuration(0.2, animations: { () -> Void in
-				}, completion: { (success: Bool) -> Void in
 				self.backgroundImageView.removeFromSuperview()
+				}, completion: { (success: Bool) -> Void in
 			})
 		}
         
-        self.disappear(1.0, animated: false)
+//        self.disappear(1.0, animated: false)
     }
     
     
@@ -431,17 +430,9 @@ class DataEntryForm: UIView {
     final func disappear(delay: NSTimeInterval, animated: Bool) {
         let delay = delay * Double(NSEC_PER_SEC)
         var time = dispatch_time(DISPATCH_TIME_NOW, Int64(delay))
+		
         dispatch_after(time, dispatch_get_main_queue(), {
-			self.animator?.removeAllBehaviors()
-			self.animator = nil
-			
-			self.cancelButton.removeFromSuperview()
-			self.doneButton.removeFromSuperview()
-			
 			self.removeFromSuperview()
-			
-			self.didDisappear()
-			self.isDisappearing = false
         })
     }
 	

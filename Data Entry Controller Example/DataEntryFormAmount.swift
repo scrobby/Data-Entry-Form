@@ -147,17 +147,7 @@ class DataEntryFormAmount: DataEntryForm {
 	}
 	
 	func createButtonWithTitleAndTag(title: String, buttonTag: Int) -> UIButton {
-		let butt = UIButton.buttonWithType(.System) as! UIButton
-		
-		butt.setTitle(title, forState: UIControlState.Normal)
-		butt.tag = buttonTag
-		
-		butt.setTranslatesAutoresizingMaskIntoConstraints(false)
-		
-		butt.setTitleColor(self.tintColor, forState: .Normal)
-		butt.titleLabel!.font = UIFont.systemFontOfSize(40.0, weight: UIFontWeightThin)
-		
-		butt.backgroundColor = UIColor(white: 0.8, alpha: 0.9)
+		var butt = UIButton.buttonWithType(.System) as! UIButton
 		
 		if buttonTag == 10 || buttonTag == 11 {
 			butt.titleLabel?.font = UIFont.systemFontOfSize(25.0, weight: UIFontWeightRegular)
@@ -167,7 +157,30 @@ class DataEntryFormAmount: DataEntryForm {
 			} else if buttonTag == 11 {
 				butt.setTitle("+/-", forState: .Normal)
 			}
+		} else {
+			butt.setTitle(title, forState: UIControlState.Normal)
+			butt.titleLabel!.font = UIFont.systemFontOfSize(40.0, weight: UIFontWeightThin)
 		}
+		
+		butt.tag = buttonTag
+		
+		butt.setTranslatesAutoresizingMaskIntoConstraints(false)
+		
+		butt.setTitleColor(self.tintColor, forState: .Normal)
+		
+		butt.backgroundColor = UIColor(white: 0.8, alpha: 0.9)
+		
+		dispatch_async(dispatch_get_main_queue(), { () -> Void in
+			if buttonTag == 10 || buttonTag == 11 {
+				butt.titleLabel?.font = UIFont.systemFontOfSize(25.0, weight: UIFontWeightRegular)
+				
+				if buttonTag == 10 {
+					butt.setTitle("<=", forState: .Normal)
+				} else if buttonTag == 11 {
+					butt.setTitle("+/-", forState: .Normal)
+				}
+			}
+		})
 		
 		return butt
 	}
@@ -282,7 +295,7 @@ class DataEntryFormAmount: DataEntryForm {
 	}
 	
 	//MARK: - Override
-	override func didShow() {
+	override func willShow() {
 		self.updateDisplayValue()
 	}
 	

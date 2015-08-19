@@ -42,6 +42,12 @@ extension UIView {
         
         //        return UIImage()
     }
+	
+	func removeAllSubviews() {
+		for subview in self.subviews {
+			subview.removeFromSuperview()
+		}
+	}
 }
 
 //MARK:- Radians Extension
