@@ -61,9 +61,7 @@ class DataEntryFormSetup: UIView {
 		return _contentBackground!
 	}
 	
-	
-	
-	var _backgroundImageView: UIImageView?
+	private var _backgroundImageView: UIImageView?
 	private var backgroundImageView: UIImageView {
 		if self._backgroundImageView == nil {
 			self._backgroundImageView = UIImageView(frame: DataEntryFormSetup.keyWindow.bounds)
@@ -77,6 +75,10 @@ class DataEntryFormSetup: UIView {
 		return self._backgroundImageView!
 	}
 	
+	private static var keyWindow: UIWindow = {
+		return UIApplication.sharedApplication().keyWindow
+		}()!
+	
     private var tempImage: UIImageView!
 	private var cancelButton = UIButton.buttonWithType(.System) as! UIButton
 	private var doneButton = UIButton.buttonWithType(.System) as! UIButton
@@ -85,13 +87,22 @@ class DataEntryFormSetup: UIView {
 	private var _snapBehaviour: UISnapBehavior?
 	private var _pushBehaviour: UIPushBehavior?
 	private var _gravityBehaviour: UIGravityBehavior?
+	private var _resistanceBehaviour: UIDynamicItemBehavior?
 	private var _preferredViewHeight: CGFloat?
 	
-    //MARK:Dynamic Animators
+	private var buttonHeight: CGFloat = 50.0
+	
+	//Useful Variables
+	var keyWindow: UIWindow {
+		return DataEntryFormSetup.keyWindow
+	}
+	
+	var isShowing = false
+	var isDisappearing = false
+	
+    //MARK: UIDynamicsKit
     let snapBehaviourDamping: CGFloat = 0.5
-    let pushMagnitude: CGFloat = 200.0
-    let gravityMagnitude: CGFloat = 20.0
-    
+		
     var animator: UIDynamicAnimator?
 	var pushBehaviour: UIPushBehavior {
 		set {
@@ -101,12 +112,10 @@ class DataEntryFormSetup: UIView {
 			if self._pushBehaviour == nil {
 				self._pushBehaviour = UIPushBehavior(items: [self], mode: .Instantaneous)
 			}
-			
 			return self._pushBehaviour!
 		}
 	}
-    
-    //Reusable dynamic behaviours
+	
 	var snapBehaviour: UISnapBehavior {
 		get {
 			if _snapBehaviour == nil {
@@ -115,7 +124,6 @@ class DataEntryFormSetup: UIView {
 				
 				return self._snapBehaviour!
 			}
-			
 			return _snapBehaviour!
 		}
 		
@@ -134,35 +142,20 @@ class DataEntryFormSetup: UIView {
 		set {
 			self._gravityBehaviour = newValue
 		}
-		
 		get {
 			if self._gravityBehaviour == nil {
 				self._gravityBehaviour = UIGravityBehavior(items: [self])
 			}
-			
 			return self._gravityBehaviour!
 		}
 	}
 	
-	private var _resistanceBehaviour: UIDynamicItemBehavior?
     var resistanceBehaviour: UIDynamicItemBehavior {
 		if _resistanceBehaviour == nil {
 			_resistanceBehaviour = UIDynamicItemBehavior(items: [self])
 		}
-        _resistanceBehaviour!.resistance = 10.0
+        _resistanceBehaviour!.resistance = self.viewResistance()
         return _resistanceBehaviour!
-    }
-	
-    
-    //MARK: Class Variables
-    static var keyWindow: UIWindow = {
-        return UIApplication.sharedApplication().keyWindow
-        }()!
-    static var blurredBackgroundImage: UIImage {
-        let snapshot = self.keyWindow.takeSnapshot()
-		let blurredSnapshot = snapshot.applyDarkEffect()
-        
-        return blurredSnapshot!
     }
 	
 	//MARK: Variables designed to be altered
@@ -207,6 +200,8 @@ class DataEntryFormSetup: UIView {
 		self.drawView()
 		
 		NSNotificationCenter.defaultCenter().addObserver(self, selector: "deviceDidRotate", name: UIDeviceOrientationDidChangeNotification, object: nil)
+		NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardShowing:", name: UIKeyboardWillShowNotification, object: nil)
+		NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardHiding:", name: UIKeyboardWillHideNotification, object: nil)
         
         //ANY INITIAL VISUAL UPDATES MUST BE DONE BEFORE THIS POINT
         
@@ -239,16 +234,6 @@ class DataEntryFormSetup: UIView {
     func didDisappear() {
         
     }
-	
-	//MARK: - Handle Rotation
-	func deviceDidRotate() {
-		self.firstDrawViewUpdate()
-		
-		self.animator?.removeAllBehaviors()
-		self.snapBehaviour = UISnapBehavior(item: self, snapToPoint: DataEntryFormSetup.keyWindow.center)
-		self.animator?.addBehavior(self.snapBehaviour)
-		self.animator?.addBehavior(self.resistanceBehaviour)
-	}
 		
     //MARK: - Setup
     func drawView() {
@@ -263,10 +248,12 @@ class DataEntryFormSetup: UIView {
 		//Change to the preferred height, making sure it will fit in the view
 		var newFrame = self.frame
 		
-		if self.preferredViewHeight() < DataEntryFormSetup.keyWindow.frame.size.height {
-			newFrame.size.height = self.preferredViewHeight()
+		let height = self.preferredViewHeight() + self.buttonHeight
+		
+		if height < keyWindow.frame.size.height {
+			newFrame.size.height = height
 		} else {
-			newFrame.size.height = DataEntryFormSetup.keyWindow.frame.size.height
+			newFrame.size.height = keyWindow.frame.size.height - self.buttonHeight
 		}
 		
 		self.frame = newFrame
@@ -316,7 +303,7 @@ class DataEntryFormSetup: UIView {
 		//Then create the constraints for these
 		constraints = Array<AnyObject>()
 		viewsDict = ["contentView" : self.contentView, "cancelButton" : self.cancelButton, "doneButton" : self.doneButton, "spacerX" : spacerX, "spacerY" : spacerY]
-		let metricsDict = ["buttonHeight" : 50]
+		let metricsDict = ["buttonHeight" : self.buttonHeight]
 		
 		constraints += NSLayoutConstraint.constraintsWithVisualFormat("H:|[contentView]|", options: nil, metrics: nil, views: viewsDict)
 		constraints += NSLayoutConstraint.constraintsWithVisualFormat("H:|[spacerX]|", options: nil, metrics: nil, views: viewsDict)
@@ -331,33 +318,34 @@ class DataEntryFormSetup: UIView {
     
     //MARK: - Display
     final func show(animationType: DataEntryFormAnimationType) {
-        self.willShow()
+		self.isShowing = true
+		self.willShow()
 		
 		if needsBackground {
-			DataEntryFormSetup.keyWindow.addSubview(self.backgroundImageView)
+			keyWindow.addSubview(self.backgroundImageView)
 			self.backgroundImageView.alpha = 0.0
 			println(self.backgroundImageView.alpha)
 		}
         
         switch animationType {
         case .Top:
-            self.center = CGPoint(x: DataEntryFormSetup.keyWindow.center.x, y: DataEntryFormSetup.keyWindow.center.y - DataEntryFormSetup.keyWindow.frame.size.height * 8)
+            self.center = CGPoint(x: keyWindow.center.x, y: keyWindow.center.y - keyWindow.frame.size.height * 8)
             break
         case .Bottom:
-            self.center = CGPoint(x: DataEntryFormSetup.keyWindow.center.x, y: DataEntryFormSetup.keyWindow.center.y + DataEntryFormSetup.keyWindow.frame.size.height * 8)
+            self.center = CGPoint(x: keyWindow.center.x, y: keyWindow.center.y + keyWindow.frame.size.height * 8)
             break
         case .Left:
-            self.center = CGPoint(x: DataEntryFormSetup.keyWindow.center.x - DataEntryFormSetup.keyWindow.frame.size.width * 10, y: DataEntryFormSetup.keyWindow.center.y)
+            self.center = CGPoint(x: keyWindow.center.x - keyWindow.frame.size.width * 10, y: keyWindow.center.y)
             break
         case .Right:
-            self.center = CGPoint(x: DataEntryFormSetup.keyWindow.center.x + DataEntryFormSetup.keyWindow.frame.size.width * 10, y: DataEntryFormSetup.keyWindow.center.y)
+            self.center = CGPoint(x: keyWindow.center.x + keyWindow.frame.size.width * 10, y: keyWindow.center.y)
             break
         }
 		
-        DataEntryFormSetup.keyWindow.addSubview(self)
+        keyWindow.addSubview(self)
         
         if self.animator == nil {
-            self.animator = UIDynamicAnimator(referenceView: DataEntryFormSetup.keyWindow)
+            self.animator = UIDynamicAnimator(referenceView: keyWindow)
         }
         
         self.animator?.addBehavior(self.snapBehaviour)
@@ -373,12 +361,14 @@ class DataEntryFormSetup: UIView {
 				self.backgroundImageView.alpha = 0.2
 			}
 			
+			self.isShowing = false
 			self.didShow()
         })
     }
     
     final func dismiss(animationType: DataEntryFormAnimationType) {
-        self.willDisappear()
+		self.isDisappearing = true
+		self.willDisappear()
         
         let image = self.takeSnapshot()
         self.tempImage = UIImageView(image: image)
@@ -389,20 +379,20 @@ class DataEntryFormSetup: UIView {
         
         switch animationType {
         case .Top:
-            self.pushBehaviour.setAngle(90.degreesToRadians, magnitude: pushMagnitude)
-            self.gravityBehaviour.setAngle(270.degreesToRadians, magnitude: gravityMagnitude)
+            self.pushBehaviour.setAngle(90.degreesToRadians, magnitude: pushMagnitude())
+            self.gravityBehaviour.setAngle(270.degreesToRadians, magnitude: gravityMagnitude())
             break
         case .Bottom:
-            self.pushBehaviour.setAngle(270.degreesToRadians, magnitude: pushMagnitude)
-            self.gravityBehaviour.setAngle(90.degreesToRadians, magnitude: gravityMagnitude)
+            self.pushBehaviour.setAngle(270.degreesToRadians, magnitude: pushMagnitude())
+            self.gravityBehaviour.setAngle(90.degreesToRadians, magnitude: gravityMagnitude())
             break
         case .Left:
-            self.pushBehaviour.setAngle(0, magnitude: pushMagnitude/2)
-            self.gravityBehaviour.setAngle(180.degreesToRadians, magnitude: gravityMagnitude/2)
+            self.pushBehaviour.setAngle(0, magnitude: pushMagnitude()/2)
+            self.gravityBehaviour.setAngle(180.degreesToRadians, magnitude: gravityMagnitude()/2)
             break
         case .Right:
-            self.pushBehaviour.setAngle(180.degreesToRadians, magnitude: pushMagnitude/2)
-            self.gravityBehaviour.setAngle(0, magnitude: gravityMagnitude/2)
+            self.pushBehaviour.setAngle(180.degreesToRadians, magnitude: pushMagnitude()/2)
+            self.gravityBehaviour.setAngle(0, magnitude: gravityMagnitude()/2)
             break
         default:
             break
@@ -412,8 +402,7 @@ class DataEntryFormSetup: UIView {
 			self.animator?.addBehavior(self.pushBehaviour)
 		}
         self.animator?.addBehavior(self.gravityBehaviour)
-        self.animator?.addBehavior(self.noRotation)
-        
+		
         self.pushBehaviour.active = true
 		
 		if self.needsBackground {
@@ -423,7 +412,7 @@ class DataEntryFormSetup: UIView {
 			})
 		}
         
-        self.disappear(4.0, animated: false)
+        self.disappear(1.0, animated: false)
     }
     
     
@@ -432,30 +421,53 @@ class DataEntryFormSetup: UIView {
         let delay = delay * Double(NSEC_PER_SEC)
         var time = dispatch_time(DISPATCH_TIME_NOW, Int64(delay))
         dispatch_after(time, dispatch_get_main_queue(), {
-            var animationTime = 0.5
-            
-            if !animated {
-                animationTime = 0.0
-            }
-            
-            UIView.animateWithDuration(animationTime, animations: { () -> Void in
-                self.alpha = 0.0
-                self.cancelButton.alpha = 0.0
-                self.doneButton.alpha = 0.0
-                
-                }, completion: { (Bool) -> Void in
-                    self.animator?.removeAllBehaviors()
-                    self.animator = nil
-                    
-                    self.cancelButton.removeFromSuperview()
-                    self.doneButton.removeFromSuperview()
-                    
-                    self.removeFromSuperview()
-                    
-                    self.didDisappear()
-            })
+			self.animator?.removeAllBehaviors()
+			self.animator = nil
+			
+			self.cancelButton.removeFromSuperview()
+			self.doneButton.removeFromSuperview()
+			
+			self.removeFromSuperview()
+			
+			self.didDisappear()
+			self.isDisappearing = false
         })
     }
+	
+	//MARK: - Handle Notifications
+	func deviceDidRotate() {
+		self.firstDrawViewUpdate()
+		
+		self.animator?.removeAllBehaviors()
+		self.snapBehaviour = UISnapBehavior(item: self, snapToPoint: keyWindow.center)
+		self.animator?.addBehavior(self.snapBehaviour)
+		self.animator?.addBehavior(self.resistanceBehaviour)
+	}
+	
+	func keyboardShowing(notification: NSNotification) {
+		if !self.isDisappearing {
+			self.animator?.removeBehavior(self.snapBehaviour)
+			
+			let keyboardRect = (notification.userInfo![UIKeyboardFrameEndUserInfoKey] as? NSValue)?.CGRectValue()
+			if keyboardRect != nil {
+				let fixedKeyboardRect = keyWindow.convertRect(keyboardRect!, toWindow: keyWindow)
+				let newCenter = CGPoint(x: keyWindow.center.x, y: (keyWindow.frame.size.height/2) - (fixedKeyboardRect.height/2))
+				self.snapBehaviour = UISnapBehavior(item: self, snapToPoint: newCenter)
+				self.animator?.addBehavior(self.snapBehaviour)
+			} else {
+				println("We’re all fucked: \(notification.userInfo)")
+			}
+		}
+	}
+	
+	func keyboardHiding(notification: NSNotification) {
+		if !self.isDisappearing {
+			self.animator?.removeBehavior(self.snapBehaviour)
+			self.snapBehaviour = UISnapBehavior(item: self, snapToPoint: keyWindow.center)
+			self.animator?.addBehavior(self.snapBehaviour)
+		}
+	}
+	
 	
     //MARK: - Done and Cancel Buttons
     func cancelButtonPressed(sender: AnyObject) {
@@ -466,12 +478,25 @@ class DataEntryFormSetup: UIView {
         self.delegate?.dataEntryFormSetupDidCancel(self)
     }
 	
-	//MARK: - Height
+	//MARK: - Methods Designed for Overriding
 	func preferredViewHeight() -> CGFloat {
-		if DataEntryFormSetup.keyWindow.frame.size.width * 0.95 < 300 {
-			return DataEntryFormSetup.keyWindow.frame.size.width * 0.95
+		if keyWindow.frame.size.width * 0.95 < 300 {
+			return keyWindow.frame.size.width * 0.95
 		} else {
 			return 300.0
 		}
+	}
+	
+	func viewResistance() -> CGFloat {
+		return 0.05 * self.preferredViewHeight()
+	}
+	
+	//If the view behaves oddly when being dismissed, it is worth trying to override these
+	func pushMagnitude() -> CGFloat {
+		return 0.7 * self.preferredViewHeight()
+	}
+	
+	func gravityMagnitude() -> CGFloat {
+		return 0.06 * (self.preferredViewHeight() + 100)
 	}
 }

@@ -59,7 +59,8 @@ class ViewController: UIViewController, DataEntryFormSetupDelegate {
     }
 
     @IBAction func textSetupTapped(sender: AnyObject) {
-		
+		let entry = DataEntryFormSetupText(title: "", delegate: self, placeholder: "Text Here")
+		entry.show(self.selectedShowStyle)
     }
     
     @IBAction func dateSetupTapped(sender: AnyObject) {

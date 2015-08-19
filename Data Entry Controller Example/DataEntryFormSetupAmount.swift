@@ -9,18 +9,25 @@
 import Foundation
 import UIKit
 
+enum DataEntryFormSetupAmountOption {
+	case UseCurrency
+}
+
 class DataEntryFormSetupAmount: DataEntryFormSetup {
 	var topLabel = UILabel()
 	
 	var backgroundView = UIView()
 	
-	var isGiving = true
+	var isPositive = true
 	var currentAmount: Float = 0.0
 	var displayAmount = Array<Int>()
 	
 	class var currencyIndicator: String {
-		//TODO: MAKE THIS GET THE CURRENCY FROM SOMEWHERE
-		return "£"
+		if NSNumberFormatter().currencySymbol != nil {
+			return NSNumberFormatter().currencySymbol!
+		} else {
+			return "$"
+		}
 	}
 	
 	class var thousandsSeparator: String {
@@ -51,7 +58,7 @@ class DataEntryFormSetupAmount: DataEntryFormSetup {
 		
 		//MARK: create the top bit
 		backgroundView.setTranslatesAutoresizingMaskIntoConstraints(false)
-		backgroundView.backgroundColor = .redColor()
+		backgroundView.backgroundColor = .clearColor()
 		
 		//MARK: add label to the top bit
 		topLabel.setTranslatesAutoresizingMaskIntoConstraints(false)
@@ -63,33 +70,28 @@ class DataEntryFormSetupAmount: DataEntryFormSetup {
 		topLabel.adjustsFontSizeToFitWidth = true
 		topLabel.minimumScaleFactor = 0.5
 		
-		topLabel.textColor = .whiteColor()
+		topLabel.textColor = .blackColor()
 		topLabel.textAlignment = .Right
 		
 		backgroundView.addSubview(topLabel)
 		
-		
-		//MARK: add a give/get button
-		let giveGetButton = self.giveGetButton()
-		backgroundView.addSubview(giveGetButton)
-		
 		//MARK: Create a spacer
-		let spacer = UIView()
-		spacer.backgroundColor = .clearColor()
-		self.contentView.addSubview(spacer)
-		spacer.setTranslatesAutoresizingMaskIntoConstraints(false)
+		let divider = UIView()
+		divider.backgroundColor = .grayColor()
+		self.contentView.addSubview(divider)
+		divider.setTranslatesAutoresizingMaskIntoConstraints(false)
 		
 		//MARK: Constraints
 		//put first view into array
 		viewsToAdd += [backgroundView]
 		
 		//begin creating the definitions
-		var viewsDict: Dictionary<String, UIView> = ["backgroundView": backgroundView, "topLabel" : topLabel, "giveGetButton" : giveGetButton, "_Spacer" : spacer]
+		var viewsDict: Dictionary<String, UIView> = ["backgroundView": backgroundView, "topLabel" : topLabel, "divider" : divider]
 		let metrics = ["exteriorSpacing" : 10.0, "interiorSpacing" : 2.0]
 		
 		
 		//create buttons and add them into the relevant arrays/dictionaries
-		let buttons: Array<String> = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "Delete"]
+		let buttons: Array<String> = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "Delete", "negative"]
 		
 		var counter = 0
 		
@@ -101,9 +103,15 @@ class DataEntryFormSetupAmount: DataEntryFormSetup {
 			println("Creating button: (\(buttonToMake)")
 			
 			switch butt.tag {
-			case 10: butt.addTarget(self, action: "deleteButtonPressed:", forControlEvents: .TouchUpInside)
+			case 10:
+				butt.addTarget(self, action: "deleteButtonPressed:", forControlEvents: .TouchUpInside)
 				break
-			default: butt.addTarget(self, action: "numberButtonPressed:", forControlEvents: .TouchUpInside)
+			case 11:
+				butt.addTarget(self, action: "negativeSwitcherButtonPressed:", forControlEvents: .TouchUpInside)
+				break
+			default:
+				butt.addTarget(self, action: "numberButtonPressed:", forControlEvents: .TouchUpInside)
+				break
 			}
 			
 			counter++
@@ -115,26 +123,24 @@ class DataEntryFormSetupAmount: DataEntryFormSetup {
 		}
 		
 		//now create all these bloody constraints
-		var constraints = Array<AnyObject>()
-		
-		constraints += NSLayoutConstraint.constraintsWithVisualFormat("|[backgroundView]|", options: nil, metrics: nil, views: viewsDict)
-		constraints += NSLayoutConstraint.constraintsWithVisualFormat("V:|[backgroundView(80)][_7]", options: nil, metrics: nil, views: viewsDict)
-		
-		var constraints2 = NSLayoutConstraint.constraintsWithVisualFormat("|-exteriorSpacing-[giveGetButton(40)]->=interiorSpacing-[topLabel]-exteriorSpacing-|", options: nil, metrics: metrics, views: viewsDict)
+		var constraints2 = NSLayoutConstraint.constraintsWithVisualFormat("H:|-exteriorSpacing-[topLabel]-exteriorSpacing-|", options: nil, metrics: metrics, views: viewsDict)
 		constraints2 += NSLayoutConstraint.constraintsWithVisualFormat("V:|-exteriorSpacing-[topLabel]-exteriorSpacing-|", options: nil, metrics: metrics, views: viewsDict)
-		constraints2 += NSLayoutConstraint.constraintsWithVisualFormat("V:|-exteriorSpacing-[giveGetButton]-exteriorSpacing-|", options: nil, metrics: metrics, views: viewsDict)
 		
 		//Horizontal constraints
-		constraints += NSLayoutConstraint.constraintsWithVisualFormat("|[_7][_8(_7)][_9(_8)]|", options: .AlignAllCenterY, metrics: nil, views: viewsDict)
-		constraints += NSLayoutConstraint.constraintsWithVisualFormat("|[_4][_5(_4)][_6(_5)]|", options: .AlignAllCenterY, metrics: nil, views: viewsDict)
-		constraints += NSLayoutConstraint.constraintsWithVisualFormat("|[_1][_2(_1)][_3(_2)]|", options: .AlignAllCenterY, metrics: nil, views: viewsDict)
-		constraints += NSLayoutConstraint.constraintsWithVisualFormat("|[_Spacer][_0(_Spacer)][_Delete(_0)]|", options: .AlignAllCenterY, metrics: nil, views: viewsDict)
+		var constraints = NSLayoutConstraint.constraintsWithVisualFormat("H:|[backgroundView]|", options: nil, metrics: nil, views: viewsDict)
+		constraints += NSLayoutConstraint.constraintsWithVisualFormat("V:|[backgroundView(80)][divider(1)][_7]", options: nil, metrics: nil, views: viewsDict)
+		
+		constraints += NSLayoutConstraint.constraintsWithVisualFormat("H:|[divider]|", options: nil, metrics: nil, views: viewsDict)
+		constraints += NSLayoutConstraint.constraintsWithVisualFormat("H:|[_7][_8(_7)][_9(_8)]|", options: .AlignAllCenterY, metrics: nil, views: viewsDict)
+		constraints += NSLayoutConstraint.constraintsWithVisualFormat("H:|[_4][_5(_4)][_6(_5)]|", options: .AlignAllCenterY, metrics: nil, views: viewsDict)
+		constraints += NSLayoutConstraint.constraintsWithVisualFormat("H:|[_1][_2(_1)][_3(_2)]|", options: .AlignAllCenterY, metrics: nil, views: viewsDict)
+		constraints += NSLayoutConstraint.constraintsWithVisualFormat("H:|[_negative][_0(_negative)][_Delete(_0)]|", options: .AlignAllCenterY, metrics: nil, views: viewsDict)
 		
 		
 		//Vertical Constraints
-		constraints += NSLayoutConstraint.constraintsWithVisualFormat("V:[_7][_4(_7)][_1(_4)][_Spacer(_1)]|", options: .AlignAllCenterX, metrics: nil, views: viewsDict)
-		constraints += NSLayoutConstraint.constraintsWithVisualFormat("V:[_8][_5(_8)][_2(_5)][_0(_2)]|", options: .AlignAllCenterX, metrics: nil, views: viewsDict)
-		constraints += NSLayoutConstraint.constraintsWithVisualFormat("V:[_9][_6(_9)][_3(_6)][_Delete(_3)]|", options: .AlignAllCenterX, metrics: nil, views: viewsDict)
+		constraints += NSLayoutConstraint.constraintsWithVisualFormat("V:[_7][_4(_7)][_1(_4)][_negative(_1)]-exteriorSpacing-|", options: .AlignAllCenterX, metrics: metrics, views: viewsDict)
+		constraints += NSLayoutConstraint.constraintsWithVisualFormat("V:[_8][_5(_8)][_2(_5)][_0(_2)]-exteriorSpacing-|", options: .AlignAllCenterX, metrics: metrics, views: viewsDict)
+		constraints += NSLayoutConstraint.constraintsWithVisualFormat("V:[_9][_6(_9)][_3(_6)][_Delete(_3)]-exteriorSpacing-|", options: .AlignAllCenterX, metrics: metrics, views: viewsDict)
 		
 		self.contentView.addConstraints(constraints)
 		backgroundView.addConstraints(constraints2)
@@ -148,32 +154,27 @@ class DataEntryFormSetupAmount: DataEntryFormSetup {
 		
 		butt.setTranslatesAutoresizingMaskIntoConstraints(false)
 		
-		butt.setTitleColor(UIColor.redColor(), forState: .Normal)
-		
-		if buttonTag == 10{
-			butt.setTitle("<=", forState: .Normal)
-		}
-		
+		butt.setTitleColor(self.tintColor, forState: .Normal)
 		butt.titleLabel!.font = UIFont.systemFontOfSize(40.0, weight: UIFontWeightThin)
 		
+		if buttonTag == 10 || buttonTag == 11 {
+			butt.titleLabel?.font = UIFont.systemFontOfSize(25.0, weight: UIFontWeightRegular)
+			
+			if buttonTag == 10 {
+				butt.setTitle("<=", forState: .Normal)
+			} else if buttonTag == 11 {
+				butt.setTitle("+/-", forState: .Normal)
+			}
+		}
+		
 		return butt
 	}
-	
-	func giveGetButton() -> UIButton {
-		var butt = UIButton.buttonWithType(.System) as! UIButton
-		butt.setTitle("Give", forState: .Normal)
-		butt.tag = 0
-		butt.addTarget(self, action: "getGiveButtonPressed:", forControlEvents: .TouchUpInside)
-		butt.setTranslatesAutoresizingMaskIntoConstraints(false)
-		return butt
-	}
-	
 	
 	//MARK: - Delegate Methods
 	override func doneButtonPressed(sender: AnyObject) {
 		println("Done button pressed")
 		
-		if self.isGiving {
+		if self.isPositive {
 			self.delegate?.dataEntryFormSetupAmountDidFinish!(self.currentAmount, setup: self)
 		} else {
 			self.delegate?.dataEntryFormSetupAmountDidFinish!(self.currentAmount * -1, setup: self)
@@ -205,24 +206,30 @@ class DataEntryFormSetupAmount: DataEntryFormSetup {
 		}
 	}
 	
-	func getGiveButtonPressed(sender: UIButton) {
-		println("Got to getgot button pressed")
+	func negativeSwitcherButtonPressed(sender: UIButton) {
 		if sender.tag == 0 {
 			sender.tag = 1
-			sender.setTitle("Get", forState: .Normal)
-			self.isGiving = false
+			self.isPositive = true
 		} else {
 			sender.tag = 0
-			sender.setTitle("Give", forState: .Normal)
-			self.isGiving = true
+			self.isPositive = false
 		}
+		
+		self.updateDisplayValue()
 	}
 	
 	
 	//MARK:- Respond to input
 	func updateDisplayValue() {
 		if self.displayAmount.count > 0 {
-			var displayString = DataEntryFormSetupAmount.currencyIndicator
+			var displayString = String()
+			
+			if isPositive {
+				displayString = DataEntryFormSetupAmount.currencyIndicator
+			} else {
+				displayString = "-\(DataEntryFormSetupAmount.currencyIndicator)"
+			}
+			
 			var counter = 0
 			
 			if self.displayAmount.count < 3 {
@@ -258,7 +265,7 @@ class DataEntryFormSetupAmount: DataEntryFormSetup {
 			let stringMinusCurrency = displayString.stringByReplacingOccurrencesOfString(DataEntryFormSetupAmount.currencyIndicator, withString: "", options: .CaseInsensitiveSearch, range: nil).stringByReplacingOccurrencesOfString(DataEntryFormSetupAmount.decimalSeparator, withString: ".", options: .CaseInsensitiveSearch, range: nil).stringByReplacingOccurrencesOfString(DataEntryFormSetupAmount.thousandsSeparator, withString: "", options: .CaseInsensitiveSearch, range: nil)
 			
 			if let newAmountValue = stringMinusCurrency.floatValue {
-				if self.isGiving {
+				if self.isPositive {
 					self.currentAmount = newAmountValue
 				} else {
 					self.currentAmount = newAmountValue * -1.0
@@ -268,11 +275,15 @@ class DataEntryFormSetupAmount: DataEntryFormSetup {
 			}
 			
 		} else {
-			self.topLabel.text = "\(NSNumberFormatter().currencySymbol)0\(DataEntryFormSetupAmount.decimalSeparator)00"
+			self.topLabel.text = "\(DataEntryFormSetupAmount.currencyIndicator)0\(DataEntryFormSetupAmount.decimalSeparator)00"
 		}
 	}
 	
 	//MARK: - Override
+	override func didShow() {
+		self.updateDisplayValue()
+	}
+	
 	override func preferredViewHeight() -> CGFloat {
 		return 350.0
 	}

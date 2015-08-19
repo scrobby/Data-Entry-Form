@@ -17,6 +17,7 @@
 		C31AE1761B7E11DB00D6A965 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C31AE1751B7E11DB00D6A965 /* Extensions.swift */; };
 		C31AE1781B7E1E5F00D6A965 /* UIImageEffects.swift in Sources */ = {isa = PBXBuildFile; fileRef = C31AE1771B7E1E5F00D6A965 /* UIImageEffects.swift */; };
 		C31AE17A1B7E34EA00D6A965 /* DataEntryFormSetupAmount.swift in Sources */ = {isa = PBXBuildFile; fileRef = C31AE1791B7E34EA00D6A965 /* DataEntryFormSetupAmount.swift */; };
+		C3F3BB791B83707C00A6FF91 /* DataEntryFormSetupText.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3F3BB781B83707C00A6FF91 /* DataEntryFormSetupText.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -45,6 +46,7 @@
 		C31AE1751B7E11DB00D6A965 /* Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		C31AE1771B7E1E5F00D6A965 /* UIImageEffects.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIImageEffects.swift; sourceTree = "<group>"; };
 		C31AE1791B7E34EA00D6A965 /* DataEntryFormSetupAmount.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataEntryFormSetupAmount.swift; sourceTree = "<group>"; };
+		C3F3BB781B83707C00A6FF91 /* DataEntryFormSetupText.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataEntryFormSetupText.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -129,6 +131,7 @@
 			children = (
 				C31AE16C1B7DEF1000D6A965 /* DataEntryFormSetup.swift */,
 				C31AE1791B7E34EA00D6A965 /* DataEntryFormSetupAmount.swift */,
+				C3F3BB781B83707C00A6FF91 /* DataEntryFormSetupText.swift */,
 				C31AE1751B7E11DB00D6A965 /* Extensions.swift */,
 			);
 			name = "Data Entry";
@@ -246,6 +249,7 @@
 				C31AE1781B7E1E5F00D6A965 /* UIImageEffects.swift in Sources */,
 				C31AE1761B7E11DB00D6A965 /* Extensions.swift in Sources */,
 				C304EA711B7A52A8006885A6 /* ViewController.swift in Sources */,
+				C3F3BB791B83707C00A6FF91 /* DataEntryFormSetupText.swift in Sources */,
 				C304EA6F1B7A52A8006885A6 /* AppDelegate.swift in Sources */,
 				C31AE16D1B7DEF1000D6A965 /* DataEntryFormSetup.swift in Sources */,
 			);
