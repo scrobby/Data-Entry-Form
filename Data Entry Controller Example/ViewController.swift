@@ -69,7 +69,8 @@ class ViewController: UIViewController, DataEntryFormDelegate {
     }
     
     @IBAction func threeSetupsTapped(sender: AnyObject) {
-		
+		var newController = DataEntryFormController(formTypesWithTitles: [(type: .Date, title: ""), (type: .Amount, title: ""), (type: .Text, title: "")], showAnimation: nil, dismissAnimation: nil)
+		newController.show()
     }
 	
 	
