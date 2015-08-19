@@ -107,7 +107,7 @@ class DataEntryFormDate : DataEntryForm {
 	}
 	
 	override func doneButtonPressed(sender: AnyObject) {
-		//remember to tell the delegate
+		self.delegate?.DataEntryFormDateDidFinish?(self.datePicker.date, setup: self)
 	}
 	
 	//MARK: - Methods Designed for Overriding
