@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ViewController: UIViewController, DataEntryFormSetupDelegate {
+class ViewController: UIViewController, DataEntryFormDelegate {
     @IBOutlet weak var showStyleSelection: UISegmentedControl!
     @IBOutlet weak var dismissStyleSelection: UISegmentedControl!
     
@@ -54,12 +54,12 @@ class ViewController: UIViewController, DataEntryFormSetupDelegate {
     }
 
     @IBAction func valueSetupTapped(sender: AnyObject) {
-        let entry = DataEntryFormSetupAmount(title: "", delegate: self)
+        let entry = DataEntryFormAmount(title: "", delegate: self)
         entry.show(self.selectedShowStyle)
     }
 
     @IBAction func textSetupTapped(sender: AnyObject) {
-		let entry = DataEntryFormSetupText(title: "", delegate: self, placeholder: "Text Here")
+		let entry = DataEntryFormText(title: "", delegate: self, placeholder: "Text Here")
 		entry.show(self.selectedShowStyle)
     }
     
@@ -72,14 +72,14 @@ class ViewController: UIViewController, DataEntryFormSetupDelegate {
     }
 	
 	
-	//Mark: - DataEntryFormSetupDelegate Methods
-    func dataEntryFormSetupDidCancel(setup: DataEntryFormSetup) {
+	//Mark: - DataEntryFormDelegate Methods
+    func DataEntryFormDidCancel(setup: DataEntryForm) {
         setup.dismiss(self.selectedDismissStyle)
     }
     
-	func dataEntryFormSetupAmountDidFinish(amount: Float, setup: DataEntryFormSetup) {		
+	func DataEntryFormAmountDidFinish(amount: Float, setup: DataEntryForm) {		
 		setup.dismiss(self.selectedDismissStyle)
-		let newSetup = DataEntryFormSetupAmount(title: "", delegate: self)
+		let newSetup = DataEntryFormAmount(title: "", delegate: self)
 		newSetup.show(self.selectedShowStyle)
 		
 	}

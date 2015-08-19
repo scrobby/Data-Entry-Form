@@ -27,13 +27,13 @@ SOFTWARE.
 import Foundation
 import UIKit
 
-enum DataEntryFormSetupType {
+enum DataEntryFormType {
     case Amount
     case Text
     case Date
 }
 
-enum DataEntryFormSetupError {
+enum DataEntryFormError {
     case noViewToBecomeInactive
 }
 
@@ -44,12 +44,12 @@ enum DataEntryFormAnimationType {
     case Left
 }
 
-@objc protocol DataEntryFormSetupDelegate {
-    func dataEntryFormSetupDidCancel(setup: DataEntryFormSetup)
-	optional func dataEntryFormSetupAmountDidFinish(amount: Float, setup: DataEntryFormSetup)
+@objc protocol DataEntryFormDelegate {
+    func DataEntryFormDidCancel(setup: DataEntryForm)
+	optional func DataEntryFormAmountDidFinish(amount: Float, setup: DataEntryForm)
 }
 
-class DataEntryFormSetup: UIView {
+class DataEntryForm: UIView {
 	//MARK: Private Variables
 	private var _contentBackground: UIVisualEffectView?
 	private var contentBackground: UIVisualEffectView {
@@ -64,7 +64,7 @@ class DataEntryFormSetup: UIView {
 	private var _backgroundImageView: UIImageView?
 	private var backgroundImageView: UIImageView {
 		if self._backgroundImageView == nil {
-			self._backgroundImageView = UIImageView(frame: DataEntryFormSetup.keyWindow.bounds)
+			self._backgroundImageView = UIImageView(frame: DataEntryForm.keyWindow.bounds)
 		}
 		
 		self._backgroundImageView?.backgroundColor = .blackColor()
@@ -94,7 +94,7 @@ class DataEntryFormSetup: UIView {
 	
 	//Useful Variables
 	var keyWindow: UIWindow {
-		return DataEntryFormSetup.keyWindow
+		return DataEntryForm.keyWindow
 	}
 	
 	var isShowing = false
@@ -119,7 +119,7 @@ class DataEntryFormSetup: UIView {
 	var snapBehaviour: UISnapBehavior {
 		get {
 			if _snapBehaviour == nil {
-				self._snapBehaviour = UISnapBehavior(item: self, snapToPoint: DataEntryFormSetup.keyWindow.center)
+				self._snapBehaviour = UISnapBehavior(item: self, snapToPoint: DataEntryForm.keyWindow.center)
 				self._snapBehaviour?.damping = snapBehaviourDamping
 				
 				return self._snapBehaviour!
@@ -160,8 +160,8 @@ class DataEntryFormSetup: UIView {
 	
 	//MARK: Variables designed to be altered
 	var formTitle: String?
-	var formType: DataEntryFormSetupType
-	var delegate: DataEntryFormSetupDelegate?
+	var formType: DataEntryFormType
+	var delegate: DataEntryFormDelegate?
 	
 	var needsBackground = true //by default this is true; a DataEntrySetupController may override this if it is providing its own background
 	var backgroundNeedsRefresh = true //override this to force a screenshot to be taken again
@@ -177,15 +177,15 @@ class DataEntryFormSetup: UIView {
     
     
     //MARK: - Initialisers
-    required init(title: String?, type: DataEntryFormSetupType, delegate: DataEntryFormSetupDelegate) {
+    required init(title: String?, type: DataEntryFormType, delegate: DataEntryFormDelegate) {
         self.formTitle = title
         self.delegate = delegate
         self.formType = type
 		
 		var firstSize: CGFloat = 0.0
 		
-		if DataEntryFormSetup.keyWindow.frame.size.width * 0.95 < 300 {
-			firstSize = DataEntryFormSetup.keyWindow.frame.size.width * 0.95
+		if DataEntryForm.keyWindow.frame.size.width * 0.95 < 300 {
+			firstSize = DataEntryForm.keyWindow.frame.size.width * 0.95
 		} else {
 			firstSize = 300.0
 		}
@@ -471,11 +471,11 @@ class DataEntryFormSetup: UIView {
 	
     //MARK: - Done and Cancel Buttons
     func cancelButtonPressed(sender: AnyObject) {
-        self.delegate?.dataEntryFormSetupDidCancel(self)
+        self.delegate?.DataEntryFormDidCancel(self)
     }
     
     func doneButtonPressed(sender: AnyObject) {
-        self.delegate?.dataEntryFormSetupDidCancel(self)
+        self.delegate?.DataEntryFormDidCancel(self)
     }
 	
 	//MARK: - Methods Designed for Overriding
