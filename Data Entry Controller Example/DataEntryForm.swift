@@ -31,6 +31,7 @@ enum DataEntryFormType {
     case Amount
     case Text
     case Date
+	case Custom
 }
 
 enum DataEntryFormError {
@@ -47,6 +48,10 @@ enum DataEntryFormAnimationType {
 @objc protocol DataEntryFormDelegate {
     func DataEntryFormDidCancel(setup: DataEntryForm)
 	optional func DataEntryFormAmountDidFinish(amount: Float, setup: DataEntryForm)
+	optional func DataEntryFormTextDidFinish(text: String, setup: DataEntryForm)
+	optional func DataEntryFormDateDidFinish(date: NSDate, setup: DataEntryForm)
+	
+	optional func DataEntryFormCustomDidFinish(payload: Dictionary<String, AnyObject>, setup: DataEntryForm)
 }
 
 class DataEntryForm: UIView {
@@ -199,16 +204,20 @@ class DataEntryForm: UIView {
 		self.firstDrawView()
 		self.drawView()
 		
-		NSNotificationCenter.defaultCenter().addObserver(self, selector: "deviceDidRotate", name: UIDeviceOrientationDidChangeNotification, object: nil)
-		NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardShowing:", name: UIKeyboardWillShowNotification, object: nil)
-		NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardHiding:", name: UIKeyboardWillHideNotification, object: nil)
+		self.contentView.backgroundColor = UIColor(white: 1.0, alpha: 0.8)
         
         //ANY INITIAL VISUAL UPDATES MUST BE DONE BEFORE THIS POINT
         
         let image = self.takeSnapshot()
         self.tempImage = UIImageView(image: image)
         self.tempImage.frame = self.bounds
+		self.tempImage.tag = 432
         self.addSubview(tempImage)
+		
+		
+		NSNotificationCenter.defaultCenter().addObserver(self, selector: "deviceDidRotate", name: UIDeviceOrientationDidChangeNotification, object: nil)
+		NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardShowing:", name: UIKeyboardWillShowNotification, object: nil)
+		NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardHiding:", name: UIKeyboardWillHideNotification, object: nil)
     }
     
     required init(coder aDecoder: NSCoder) {
@@ -263,6 +272,7 @@ class DataEntryForm: UIView {
 		self.firstDrawViewUpdate()
 		
 		//Add the blur background
+		self.contentBackground.tag = 432
 		self.insertSubview(self.contentBackground, atIndex: 0)
 		
 		var constraints = Array<AnyObject>()
@@ -352,20 +362,20 @@ class DataEntryForm: UIView {
         self.animator?.addBehavior(self.noRotation)
         self.animator?.addBehavior(self.resistanceBehaviour)
 		
-        UIView.animateWithDuration(0.5, animations: { () -> Void in
+		UIView.animateWithDuration(0.5, animations: { () -> Void in
 			
-		}, completion: { (Bool) -> Void in
-			self.tempImage.removeFromSuperview()
-			
-			if self.needsBackground {
-				self.backgroundImageView.alpha = 0.2
-			}
-			
-			self.isShowing = false
-			self.didShow()
-        })
-    }
-    
+			}, completion: { (Bool) -> Void in
+				self.tempImage.removeFromSuperview()
+				
+				if self.needsBackground {
+					self.backgroundImageView.alpha = 0.2
+				}
+				
+				self.isShowing = false
+				self.didShow()
+		})
+	}
+	
     final func dismiss(animationType: DataEntryFormAnimationType) {
 		self.isDisappearing = true
 		self.willDisappear()
@@ -373,6 +383,7 @@ class DataEntryForm: UIView {
         let image = self.takeSnapshot()
         self.tempImage = UIImageView(image: image)
         self.tempImage.frame = self.bounds
+		self.tempImage.tag = 432
         self.addSubview(tempImage)
         
         self.animator?.removeAllBehaviors()
@@ -498,5 +509,38 @@ class DataEntryForm: UIView {
 	
 	func gravityMagnitude() -> CGFloat {
 		return 0.06 * (self.preferredViewHeight() + 100)
+	}
+	
+	//To try and stop unwanted additions
+	override func addSubview(view: UIView) {
+		if view.tag != 432 {
+			println("Views and constraints must be added to contentView, not to self.")
+		}
+		
+		super.addSubview(view)
+	}
+	
+	override func insertSubview(view: UIView, aboveSubview siblingSubview: UIView) {
+		if view.tag != 432 {
+			println("Views and constraints must be added to contentView, not to self.")
+		}
+		
+		super.insertSubview(view, aboveSubview: siblingSubview)
+	}
+	
+	override func insertSubview(view: UIView, atIndex index: Int) {
+		if view.tag != 432 {
+			println("Views and constraints must be added to contentView, not to self.")
+		}
+		
+		super.insertSubview(view, atIndex: index)
+	}
+	
+	override func insertSubview(view: UIView, belowSubview siblingSubview: UIView) {
+		if view.tag != 432 {
+			println("Views and constraints must be added to contentView, not to self.")
+		}
+		
+		super.insertSubview(view, belowSubview: siblingSubview)
 	}
 }

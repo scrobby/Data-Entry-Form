@@ -64,7 +64,8 @@ class ViewController: UIViewController, DataEntryFormDelegate {
     }
     
     @IBAction func dateSetupTapped(sender: AnyObject) {
-		
+		let entry = DataEntryFormDate(title: "", delegate: self, dates: nil)
+		entry.show(self.selectedShowStyle)
     }
     
     @IBAction func threeSetupsTapped(sender: AnyObject) {
@@ -79,9 +80,14 @@ class ViewController: UIViewController, DataEntryFormDelegate {
     
 	func DataEntryFormAmountDidFinish(amount: Float, setup: DataEntryForm) {		
 		setup.dismiss(self.selectedDismissStyle)
-		let newSetup = DataEntryFormAmount(title: "", delegate: self)
-		newSetup.show(self.selectedShowStyle)
-		
+	}
+	
+	func DataEntryFormDateDidFinish(date: NSDate, setup: DataEntryForm) {
+		setup.dismiss(self.selectedDismissStyle)
+	}
+	
+	func DataEntryFormTextDidFinish(text: String, setup: DataEntryForm) {
+		setup.dismiss(self.selectedDismissStyle)
 	}
 }
 

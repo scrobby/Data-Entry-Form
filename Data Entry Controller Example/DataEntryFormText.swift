@@ -58,6 +58,11 @@ class DataEntryFormText: DataEntryForm {
 		self.textBox.resignFirstResponder()
 	}
 	
+	//MARK: - Done/Cancel
+	override func doneButtonPressed(sender: AnyObject) {
+		self.delegate?.DataEntryFormTextDidFinish?(self.textBox.text, setup: self)
+	}
+	
 	//MARK: - Overrides
 	override func preferredViewHeight() -> CGFloat {
 		return viewHeight
