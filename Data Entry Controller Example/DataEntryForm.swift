@@ -201,16 +201,16 @@ class DataEntryForm: UIView {
 		self.layer.cornerRadius = 20.0
 		self.clipsToBounds = true
 		
+		self.contentView.backgroundColor = UIColor(white: 1.0, alpha: 0.8)
+		
 		self.firstDrawView()
 		self.drawView()
 		
-		self.contentView.backgroundColor = UIColor(white: 1.0, alpha: 0.8)
-		
-		let image = self.takeSnapshot()
-		self.tempImage = UIImageView(image: image)
-		self.tempImage.frame = self.bounds
-		self.tempImage.tag = 432
-		self.addSubview(tempImage)
+//		let image = self.takeSnapshot()
+//		self.tempImage = UIImageView(image: image)
+//		self.tempImage.frame = self.bounds
+//		self.tempImage.tag = 432
+//		self.addSubview(tempImage)
 		
 		NSNotificationCenter.defaultCenter().addObserver(self, selector: "deviceDidRotate", name: UIDeviceOrientationDidChangeNotification, object: nil)
 		NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardShowing:", name: UIKeyboardWillShowNotification, object: nil)
@@ -326,9 +326,15 @@ class DataEntryForm: UIView {
     //MARK: - Display
     final func show(animationType: DataEntryFormAnimationType) {
 		self.isShowing = true
-		self.willShow()
 		
 		keyWindow.addSubview(self)
+		let image = self.takeSnapshot()
+		self.tempImage = UIImageView(image: image)
+		self.tempImage.frame = self.bounds
+		self.tempImage.tag = 432
+		self.addSubview(tempImage)
+		
+		self.willShow()
 		
 		if needsBackground {
 			keyWindow.insertSubview(self.backgroundImageView, belowSubview: self)
@@ -358,9 +364,9 @@ class DataEntryForm: UIView {
         self.animator?.addBehavior(self.noRotation)
         self.animator?.addBehavior(self.resistanceBehaviour)
 		
-		UIView.animateWithDuration(0.5, animations: { () -> Void in
+		UIView.animateWithDuration(0.3, animations: { () -> Void in
 			if self.needsBackground {
-				self.backgroundImageView.alpha = 0.2
+				self.backgroundImageView.alpha = 0.4
 			}
 			}, completion: { (Bool) -> Void in
 				self.tempImage.removeFromSuperview()
@@ -381,9 +387,8 @@ class DataEntryForm: UIView {
 		self.willDisappear()
 		
 		self.removeAllSubviews()
-		
         self.addSubview(tempImage)
-        
+		
         self.animator?.removeAllBehaviors()
         
         switch animationType {
@@ -414,15 +419,14 @@ class DataEntryForm: UIView {
 		
 		self.pushBehaviour.active = true
 		
-		
 		if self.needsBackground {
-			UIView.animateWithDuration(0.2, animations: { () -> Void in
-				self.backgroundImageView.removeFromSuperview()
+			UIView.animateWithDuration(0.3, animations: { () -> Void in
+				self.backgroundImageView.alpha = 0.0
 				}, completion: { (success: Bool) -> Void in
+					self.backgroundImageView.removeFromSuperview()
 			})
 		}
-        
-//        self.disappear(1.0, animated: false)
+        self.disappear(4.0, animated: false)
     }
     
     

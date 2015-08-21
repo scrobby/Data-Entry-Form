@@ -56,6 +56,8 @@ class DataEntryFormAmount: DataEntryForm {
 	override func drawView() {
 		var viewsToAdd = Array<UIView>()
 		
+		self.contentView.backgroundColor = .clearColor()
+		
 		//MARK: create the top bit
 		backgroundView.setTranslatesAutoresizingMaskIntoConstraints(false)
 		backgroundView.backgroundColor = .clearColor()
@@ -99,8 +101,6 @@ class DataEntryFormAmount: DataEntryForm {
 			let butt = self.createButtonWithTitleAndTag(buttonToMake, buttonTag: counter)
 			viewsDict["_" + buttonToMake] = butt
 			viewsToAdd += [butt]
-			
-			println("Creating button: (\(buttonToMake)")
 			
 			switch butt.tag {
 			case 10:
@@ -166,9 +166,7 @@ class DataEntryFormAmount: DataEntryForm {
 		
 		butt.setTranslatesAutoresizingMaskIntoConstraints(false)
 		
-		butt.setTitleColor(self.tintColor, forState: .Normal)
-		
-		butt.backgroundColor = UIColor(white: 0.8, alpha: 0.9)
+		butt.backgroundColor = UIColor(white: 1.0, alpha: 0.8)
 		
 		dispatch_async(dispatch_get_main_queue(), { () -> Void in
 			if buttonTag == 10 || buttonTag == 11 {
@@ -187,8 +185,6 @@ class DataEntryFormAmount: DataEntryForm {
 	
 	//MARK: - Delegate Methods
 	override func doneButtonPressed(sender: AnyObject) {
-		println("Done button pressed")
-		
 		if self.isPositive {
 			self.delegate?.DataEntryFormAmountDidFinish!(self.currentAmount, setup: self)
 		} else {
