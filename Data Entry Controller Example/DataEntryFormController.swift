@@ -24,6 +24,11 @@ struct FormAnimations {
 	var dismissAnimation: DataEntryFormAnimationType
 }
 
+protocol DataEntryFormControllerDelegate: DataEntryFormDelegate {
+	func dataEntryFormControllerDidCancel(controller: DataEntryFormController)
+	func dataEntryFormControllerDidFinish(controller: DataEntryFormController)
+}
+
 class DataEntryFormController: NSObject, DataEntryFormDelegate {
 	private var _backgroundImageView: UIImageView?
 	private var backgroundImageView: UIImageView {
@@ -36,11 +41,11 @@ class DataEntryFormController: NSObject, DataEntryFormDelegate {
 		return self._backgroundImageView!
 	}
 	
+	var delegate: DataEntryFormControllerDelegate?
+	
 	var formsToDisplay = Array<FormToDisplayWithAnimations>()
 	var currentFormNumber = -1
 	
-	
-	//requires a form that has already been configured
 	init(forms: Array<FormToDisplayWithAnimations>) {
 		super.init()
 		
@@ -57,6 +62,28 @@ class DataEntryFormController: NSObject, DataEntryFormDelegate {
 			}
 			
 			self.formsToDisplay += [FormToDisplayWithAnimations(form: form, animations: animations)]
+		}
+	}
+	
+	init(forms: Array<DataEntryForm>, startAndEndAnimations: FormAnimations, middleAnimations: FormAnimations) {
+		super.init()
+		
+		var counter = 0
+		
+		for formToAdd in forms {
+			var newAnimations: FormAnimations?
+			
+			if counter == 0 {
+				newAnimations = FormAnimations(showAnimation: startAndEndAnimations.showAnimation, dismissAnimation: middleAnimations.dismissAnimation)
+			} else if counter + 1 == forms.count {
+				newAnimations = FormAnimations(showAnimation: middleAnimations.showAnimation, dismissAnimation: startAndEndAnimations.dismissAnimation)
+			} else {
+				newAnimations = middleAnimations
+			}
+			
+			self.formsToDisplay += [FormToDisplayWithAnimations(form: formToAdd, animations: newAnimations!)]
+			
+			counter++
 		}
 	}
 	
@@ -81,6 +108,29 @@ class DataEntryFormController: NSObject, DataEntryFormDelegate {
 		}
 	}
 	
+	init(formTypesWithTitles: Array<FormTypeWithTitle>, startAndEndAnimations: FormAnimations, middleAnimations: FormAnimations) {
+		super.init()
+		
+		var counter = 0
+		
+		for formAndTitleToAdd in formTypesWithTitles {
+			var newAnimations: FormAnimations?
+			let formToAdd = self.createFormWithType(formAndTitleToAdd.formType, title: formAndTitleToAdd.title, delegate: self)
+			
+			if counter == 0 {
+				newAnimations = FormAnimations(showAnimation: startAndEndAnimations.showAnimation, dismissAnimation: middleAnimations.dismissAnimation)
+			} else if counter + 1 == formTypesWithTitles.count {
+				newAnimations = FormAnimations(showAnimation: middleAnimations.showAnimation, dismissAnimation: startAndEndAnimations.dismissAnimation)
+			} else {
+				newAnimations = middleAnimations
+			}
+			
+			self.formsToDisplay += [FormToDisplayWithAnimations(form: formToAdd, animations: newAnimations!)]
+			
+			counter++
+		}
+	}
+	
 	//MARK: - Showing
 	func show() {
 		if currentFormNumber == -1 {
@@ -96,8 +146,8 @@ class DataEntryFormController: NSObject, DataEntryFormDelegate {
 	
 	//MARK: - Work out what the animations should be
 	func selectAnimations(currentAddition: Int, totalForms: Int, showAnimation: DataEntryFormAnimationType?, dismissAnimation: DataEntryFormAnimationType?) -> FormAnimations {
-		var newShowAnimation = DataEntryFormAnimationType.Top
-		var newDismissAnimation = DataEntryFormAnimationType.Bottom
+		var newShowAnimation = DataEntryFormAnimationType.Bottom
+		var newDismissAnimation = DataEntryFormAnimationType.Top
 		
 		var shouldCalculateShowAnimation = true
 		var shouldCalculateDismissAnimation = true
@@ -140,12 +190,18 @@ class DataEntryFormController: NSObject, DataEntryFormDelegate {
 			formToShow.form.needsBackground = false
 			formToShow.form.show(formToShow.animations.showAnimation)
 		} else {
-			UIView.animateWithDuration(1.0, animations: { () -> Void in
-				self.backgroundImageView.alpha = 0.0
-				}, completion: { (completed: Bool) -> Void in
-					self.backgroundImageView.removeFromSuperview()
-			})
+			self.dismiss()
+			
+			self.delegate?.dataEntryFormControllerDidFinish(self)
 		}
+	}
+	
+	func dismiss() {
+		UIView.animateWithDuration(1.0, animations: { () -> Void in
+			self.backgroundImageView.alpha = 0.0
+			}, completion: { (completed: Bool) -> Void in
+				self.backgroundImageView.removeFromSuperview()
+		})
 	}
 	
 	//MARK: - Create forms from types
@@ -165,26 +221,40 @@ class DataEntryFormController: NSObject, DataEntryFormDelegate {
 	//MARK: - DataEntryFormDelegate Methods
 	func DataEntryFormDidCancel(setup: DataEntryForm) {
 		setup.dismiss(self.formsToDisplay[currentFormNumber].animations.dismissAnimation)
-		self.showNextForm()
+		self.dismiss()
+		
+		self.delegate?.dataEntryFormControllerDidCancel(self)
 	}
 	
 	func DataEntryFormAmountDidFinish(amount: Float, setup: DataEntryForm) {
 		setup.dismiss(self.formsToDisplay[currentFormNumber].animations.dismissAnimation)
+		
+		self.delegate?.DataEntryFormAmountDidFinish?(amount, setup: setup)
+		
 		self.showNextForm()
 	}
 	
 	func DataEntryFormTextDidFinish(text: String, setup: DataEntryForm) {
 		setup.dismiss(self.formsToDisplay[currentFormNumber].animations.dismissAnimation)
+		
+		self.delegate?.DataEntryFormTextDidFinish?(text, setup: setup)
+		
 		self.showNextForm()
 	}
 	
 	func DataEntryFormDateDidFinish(date: NSDate, setup: DataEntryForm) {
 		setup.dismiss(self.formsToDisplay[currentFormNumber].animations.dismissAnimation)
+		
+		self.delegate?.DataEntryFormDateDidFinish?(date, setup: setup)
+		
 		self.showNextForm()
 	}
 	
 	func DataEntryFormCustomDidFinish(payload: Dictionary<String, AnyObject>, setup: DataEntryForm) {
 		setup.dismiss(self.formsToDisplay[currentFormNumber].animations.dismissAnimation)
+		
+		self.delegate?.DataEntryFormCustomDidFinish?(payload, setup: setup)
+		
 		self.showNextForm()
 	}
 }
