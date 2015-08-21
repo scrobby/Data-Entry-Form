@@ -1,4 +1,4 @@
-# DataEntryController
+# Data Entry Forms
 A simple way of creating forms designed for data entry and presenting them to the user.
 
 ## DataEntryForm
@@ -18,6 +18,8 @@ Any object subclassing DataEntryForm should **never** add anything directly to �
 ### DataEntryFormAmount
 This is a numerical entry that presents the user with a calculator-style data entry form in which they can enter any number. This automatically adds a currency symbol and decimal places, and allows the user to make the value negative or positive.
 
+![Amount Data Entry Form](https://github.com/scrobby/Data-Entry-Form/blob/documentation/Documentation/images/amount_v1.gif)
+
 
 #### To-Do
 - Need to add an image for the “Delete” button so it doesn’t look so ugly.
@@ -29,12 +31,18 @@ This is a numerical entry that presents the user with a calculator-style data en
 ### DataEntryFormText
 This is a very simple subclass that makes it easy to present the user with a way of entering text. There is a placeholder value, allowing the user to be prompted about what they should enter in the field.
 
+![Text Data Entry Form][https://github.com/scrobby/Data-Entry-Form/blob/documentation/Documentation/images/text_v1.gif]
+
 
 ### DataEntryFormDate
 Presents the user with a UIDatePicker, allowing them to select a date/time.
 
 By default this allows any date after the current date, at 5-minute intervals, with no maximum. It is possible to alter this when initialising a DataEntryFormDate without having to touch the UIDatePicker directly.
 
+![Date Data Entry Form][https://github.com/scrobby/Data-Entry-Form/blob/documentation/Documentation/images/bottom_date_v1.gif]
+
 
 ## DataEntryFormController
 The purpose of a DataEntrySetupController is to allow for easy presentation of multiple DataEntrySetups, without having to present each one manually. The DataEntrySetupControllerDelegate has to conform to all of the DataEntrySetupDelegate methods.
+
+![Data Entry Form Controller][https://github.com/scrobby/Data-Entry-Form/blob/documentation/Documentation/images/controller_v1.gif]
