@@ -10,7 +10,11 @@ import UIKit
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
-
+	
+	static var keyWindow: UIWindow = {
+		return UIApplication.sharedApplication().keyWindow
+		}()!
+	
     var window: UIWindow?
 
 

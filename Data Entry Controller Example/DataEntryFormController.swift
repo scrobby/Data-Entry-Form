@@ -25,6 +25,17 @@ struct FormAnimations {
 }
 
 class DataEntryFormController: NSObject, DataEntryFormDelegate {
+	private var _backgroundImageView: UIImageView?
+	private var backgroundImageView: UIImageView {
+		if self._backgroundImageView == nil {
+			self._backgroundImageView = UIImageView(frame: AppDelegate.keyWindow.bounds)
+		}
+		
+		self._backgroundImageView?.backgroundColor = .blackColor()
+		
+		return self._backgroundImageView!
+	}
+	
 	var formsToDisplay = Array<FormToDisplayWithAnimations>()
 	var currentFormNumber = -1
 	
@@ -72,6 +83,14 @@ class DataEntryFormController: NSObject, DataEntryFormDelegate {
 	
 	//MARK: - Showing
 	func show() {
+		if currentFormNumber == -1 {
+			AppDelegate.keyWindow.addSubview(self.backgroundImageView)
+			self.backgroundImageView.alpha = 0.0
+			UIView.animateWithDuration(0.5, animations: { () -> Void in
+				self.backgroundImageView.alpha = 0.2
+			})
+		}
+		
 		self.showNextForm()
 	}
 	
@@ -118,9 +137,14 @@ class DataEntryFormController: NSObject, DataEntryFormDelegate {
 		
 		if currentFormNumber < self.formsToDisplay.count {
 			let formToShow = self.formsToDisplay[currentFormNumber]
+			formToShow.form.needsBackground = false
 			formToShow.form.show(formToShow.animations.showAnimation)
 		} else {
-			//REACHED THE END
+			UIView.animateWithDuration(1.0, animations: { () -> Void in
+				self.backgroundImageView.alpha = 0.0
+				}, completion: { (completed: Bool) -> Void in
+					self.backgroundImageView.removeFromSuperview()
+			})
 		}
 	}
 	
