@@ -147,34 +147,7 @@ class DataEntryFormAmount: DataEntryForm {
 	}
 	
 	func createButtonWithTitleAndTag(title: String, buttonTag: Int) -> UIButton {
-<<<<<<< HEAD
 		let butt = UIButton.buttonWithType(.System) as! UIButton
-		
-		butt.setTitle(title, forState: UIControlState.Normal)
-		butt.tag = buttonTag
-		
-		butt.setTranslatesAutoresizingMaskIntoConstraints(false)
-		
-		butt.setTitleColor(self.tintColor, forState: .Normal)
-		butt.titleLabel!.font = UIFont.systemFontOfSize(40.0, weight: UIFontWeightThin)
-		
-		butt.backgroundColor = UIColor(white: 1.0, alpha: 0.8)
-=======
-		var butt = UIButton.buttonWithType(.System) as! UIButton
->>>>>>> optimise-animations
-		
-		if buttonTag == 10 || buttonTag == 11 {
-			butt.titleLabel?.font = UIFont.systemFontOfSize(25.0, weight: UIFontWeightRegular)
-			
-			if buttonTag == 10 {
-				butt.setTitle("←", forState: .Normal)
-			} else if buttonTag == 11 {
-				butt.setTitle("+/-", forState: .Normal)
-			}
-		} else {
-			butt.setTitle(title, forState: UIControlState.Normal)
-			butt.titleLabel!.font = UIFont.systemFontOfSize(40.0, weight: UIFontWeightThin)
-		}
 		
 		butt.tag = buttonTag
 		
@@ -191,6 +164,9 @@ class DataEntryFormAmount: DataEntryForm {
 				} else if buttonTag == 11 {
 					butt.setTitle("+/-", forState: .Normal)
 				}
+			} else {
+				butt.setTitle(title, forState: UIControlState.Normal)
+				butt.titleLabel!.font = UIFont.systemFontOfSize(40.0, weight: UIFontWeightThin)
 			}
 		})
 		
