@@ -34,14 +34,18 @@ extension UIView {
         
         drawViewHierarchyInRect(self.bounds, afterScreenUpdates: true)
         
-        // old style: layer.renderInContext(UIGraphicsGetCurrentContext())
-        
+//        self.layer.renderInContext(UIGraphicsGetCurrentContext())
+		
         let image = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
         return image
-        
-        //        return UIImage()
     }
+	
+	func removeAllSubviews() {
+		for subview in self.subviews {
+			subview.removeFromSuperview()
+		}
+	}
 }
 
 //MARK:- Radians Extension

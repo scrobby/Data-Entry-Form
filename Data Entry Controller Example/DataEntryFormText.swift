@@ -22,7 +22,7 @@ class DataEntryFormText: DataEntryForm {
 		self.textBox.adjustsFontSizeToFitWidth = true
 		self.textBox.textAlignment = .Center
 		
-		self.contentView.backgroundColor = UIColor(white: 1.0, alpha: 0.7)
+		self.contentView.backgroundColor = UIColor(white: 1.0, alpha: 1.0)
 	}
 	
 	required init(title: String?, type: DataEntryFormType, delegate: DataEntryFormDelegate) {
@@ -54,7 +54,7 @@ class DataEntryFormText: DataEntryForm {
 		self.textBox.becomeFirstResponder()
 	}
 	
-	override func willDisappear() {
+	override func didDisappear() {
 		self.textBox.resignFirstResponder()
 	}
 	

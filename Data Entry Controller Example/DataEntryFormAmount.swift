@@ -56,6 +56,8 @@ class DataEntryFormAmount: DataEntryForm {
 	override func drawView() {
 		var viewsToAdd = Array<UIView>()
 		
+		self.contentView.backgroundColor = .clearColor()
+		
 		//MARK: create the top bit
 		backgroundView.setTranslatesAutoresizingMaskIntoConstraints(false)
 		backgroundView.backgroundColor = .clearColor()
@@ -99,8 +101,6 @@ class DataEntryFormAmount: DataEntryForm {
 			let butt = self.createButtonWithTitleAndTag(buttonToMake, buttonTag: counter)
 			viewsDict["_" + buttonToMake] = butt
 			viewsToAdd += [butt]
-			
-			println("Creating button: (\(buttonToMake)")
 			
 			switch butt.tag {
 			case 10:
@@ -147,6 +147,7 @@ class DataEntryFormAmount: DataEntryForm {
 	}
 	
 	func createButtonWithTitleAndTag(title: String, buttonTag: Int) -> UIButton {
+<<<<<<< HEAD
 		let butt = UIButton.buttonWithType(.System) as! UIButton
 		
 		butt.setTitle(title, forState: UIControlState.Normal)
@@ -157,25 +158,47 @@ class DataEntryFormAmount: DataEntryForm {
 		butt.setTitleColor(self.tintColor, forState: .Normal)
 		butt.titleLabel!.font = UIFont.systemFontOfSize(40.0, weight: UIFontWeightThin)
 		
-		butt.backgroundColor = UIColor(white: 0.8, alpha: 0.9)
+		butt.backgroundColor = UIColor(white: 1.0, alpha: 0.8)
+=======
+		var butt = UIButton.buttonWithType(.System) as! UIButton
+>>>>>>> optimise-animations
 		
 		if buttonTag == 10 || buttonTag == 11 {
 			butt.titleLabel?.font = UIFont.systemFontOfSize(25.0, weight: UIFontWeightRegular)
 			
 			if buttonTag == 10 {
-				butt.setTitle("<=", forState: .Normal)
+				butt.setTitle("←", forState: .Normal)
 			} else if buttonTag == 11 {
 				butt.setTitle("+/-", forState: .Normal)
 			}
+		} else {
+			butt.setTitle(title, forState: UIControlState.Normal)
+			butt.titleLabel!.font = UIFont.systemFontOfSize(40.0, weight: UIFontWeightThin)
 		}
+		
+		butt.tag = buttonTag
+		
+		butt.setTranslatesAutoresizingMaskIntoConstraints(false)
+		
+		butt.backgroundColor = UIColor(white: 1.0, alpha: 0.8)
+		
+		dispatch_async(dispatch_get_main_queue(), { () -> Void in
+			if buttonTag == 10 || buttonTag == 11 {
+				butt.titleLabel?.font = UIFont.systemFontOfSize(25.0, weight: UIFontWeightRegular)
+				
+				if buttonTag == 10 {
+					butt.setTitle("<=", forState: .Normal)
+				} else if buttonTag == 11 {
+					butt.setTitle("+/-", forState: .Normal)
+				}
+			}
+		})
 		
 		return butt
 	}
 	
 	//MARK: - Delegate Methods
 	override func doneButtonPressed(sender: AnyObject) {
-		println("Done button pressed")
-		
 		if self.isPositive {
 			self.delegate?.DataEntryFormAmountDidFinish!(self.currentAmount, setup: self)
 		} else {
@@ -282,7 +305,7 @@ class DataEntryFormAmount: DataEntryForm {
 	}
 	
 	//MARK: - Override
-	override func didShow() {
+	override func willShow() {
 		self.updateDisplayValue()
 	}
 	
